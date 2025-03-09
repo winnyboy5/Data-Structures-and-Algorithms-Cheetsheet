@@ -118,6 +118,7 @@ function bubbleSort(arr) {
     for (let i = 0; i < n; i++) {
         let swapped = false;
         
+        // Last i elements are already in place
         for (let j = 0; j < n - i - 1; j++) {
             if (arr[j] > arr[j + 1]) {
                 // Swap elements
@@ -880,53 +881,177 @@ function bucketSort(arr) {
 
 ## Related Blind 75 & Grind 75 Problems
 
-1. **Sort Colors** (Blind 75 #48)
-   - Problem: Sort an array of 0s, 1s, and 2s in-place.
-   - Solution: Use Dutch National Flag algorithm (a variation of quicksort).
-   - [LeetCode #75](https://leetcode.com/problems/sort-colors/)
+Sorting is a fundamental technique that appears in many coding interview problems. Here are some notable problems from the Blind 75 and Grind 75 lists that involve sorting concepts:
 
-2. **Merge Intervals** (Blind 75 #57)
-   - Problem: Merge overlapping intervals.
-   - Solution: Sort intervals by start time, then merge overlapping ones.
-   - [LeetCode #56](https://leetcode.com/problems/merge-intervals/)
+### 1. [Merge Intervals](../solutions/merge-intervals.md)
+- **Difficulty**: Medium
+- **Problem**: Given an array of intervals, merge all overlapping intervals.
+- **Sorting Application**: Sort intervals by start time to easily identify overlaps.
 
-3. **Kth Largest Element in an Array** (Blind 75 #47)
-   - Problem: Find the kth largest element in an unsorted array.
-   - Solution: Use quickselect (a variation of quicksort) or a heap.
-   - [LeetCode #215](https://leetcode.com/problems/kth-largest-element-in-an-array/)
+### 2. [Meeting Rooms II](../solutions/meeting-rooms-ii.md)
+- **Difficulty**: Medium
+- **Problem**: Given an array of meeting time intervals, find the minimum number of conference rooms required.
+- **Sorting Application**: Sort start and end times separately to track room usage.
 
-4. **Meeting Rooms II** (Blind 75 #59)
-   - Problem: Find the minimum number of meeting rooms required.
-   - Solution: Sort start and end times separately, then use a greedy approach.
-   - [LeetCode #253](https://leetcode.com/problems/meeting-rooms-ii/)
+### 3. [Kth Largest Element in an Array](../solutions/kth-largest-element.md)
+- **Difficulty**: Medium
+- **Problem**: Find the kth largest element in an unsorted array.
+- **Sorting Application**: Can be solved using sorting, quickselect, or heap-based methods.
+
+### 4. [Top K Frequent Elements](../solutions/top-k-frequent-elements.md)
+- **Difficulty**: Medium
+- **Problem**: Given an integer array, return the k most frequent elements.
+- **Sorting Application**: Count frequencies and sort by frequency.
+
+### 5. [Sort Colors](../solutions/sort-colors.md)
+- **Difficulty**: Medium
+- **Problem**: Sort an array of 0s, 1s, and 2s in-place.
+- **Sorting Application**: Implementation of Dutch National Flag algorithm, a specialized sorting technique.
+
+### 6. [Largest Number](../solutions/largest-number.md)
+- **Difficulty**: Medium
+- **Problem**: Arrange numbers to form the largest possible number.
+- **Sorting Application**: Custom sorting with a specialized comparator function.
+
+### 7. [Wiggle Sort](../solutions/wiggle-sort.md)
+- **Difficulty**: Medium
+- **Problem**: Reorder array such that nums[0] < nums[1] > nums[2] < nums[3]...
+- **Sorting Application**: Sort first, then rearrange in a specific pattern.
+
+### 8. [Find Median from Data Stream](../solutions/find-median-from-data-stream.md)
+- **Difficulty**: Hard
+- **Problem**: Design a data structure that supports adding integers and finding the median.
+- **Sorting Application**: Maintaining a sorted structure or using heaps (which are used in heap sort).
 
 ## Tips and Tricks
 
-1. **Choosing the Right Sorting Algorithm**:
-   - For small arrays (n < 50): Insertion Sort
-   - For general purpose: Quick Sort, Merge Sort
-   - For stability requirement: Merge Sort
-   - For nearly sorted data: Insertion Sort
-   - For limited range of integers: Counting Sort
-   - For external sorting (data doesn't fit in memory): Merge Sort
+### 1. Algorithm Selection Guidelines
 
-2. **Optimization Techniques**:
-   - Use hybrid approaches (e.g., Timsort combines merge sort and insertion sort)
-   - Implement early termination conditions
-   - Choose good pivot strategies for quicksort (median-of-three)
-   - Use insertion sort for small subarrays in merge sort and quicksort
+Choose the right sorting algorithm based on your specific needs:
 
-3. **Common Pitfalls**:
-   - Forgetting edge cases (empty arrays, single elements)
-   - Not handling duplicates properly
-   - Overlooking stability requirements
-   - Using comparison-based sorts for data with a small range of values
+| When to Use | Recommended Algorithm |
+|-------------|------------------------|
+| Small arrays (n < 50) | Insertion Sort |
+| General purpose, guaranteed performance | Merge Sort |
+| In-place sorting with good average performance | Quick Sort |
+| Sorting integers with limited range | Counting Sort |
+| External sorting (data doesn't fit in memory) | External Merge Sort |
+| Nearly sorted data | Insertion Sort |
+| Minimal code complexity | Selection Sort |
+| Memory constraints are tight | Heap Sort |
+| Multi-digit numbers/strings | Radix Sort |
 
-4. **Interview Tips**:
-   - Know the time and space complexity of each algorithm
-   - Understand when to use each algorithm based on the problem constraints
-   - Be able to implement at least merge sort and quicksort from memory
-   - Practice identifying when a sorting algorithm is needed as part of a larger solution 
+### 2. Language-Specific Optimizations
+
+#### Python
+```python
+# Built-in sort is Timsort (hybrid of merge sort and insertion sort)
+arr.sort()  # In-place sorting
+sorted_arr = sorted(arr)  # Returns new sorted array
+
+# Custom sorting with key function (more efficient than using cmp)
+students.sort(key=lambda x: x.grade)  # Sort by grade
+students.sort(key=lambda x: (x.grade, x.name))  # Sort by grade, then name
+
+# Reverse sorting
+arr.sort(reverse=True)
+
+# Sorting with itemgetter (faster than lambda)
+from operator import itemgetter
+students.sort(key=itemgetter('grade'))
+```
+
+#### JavaScript
+```javascript
+// Built-in sort uses different algorithms depending on browser
+// Chrome: Timsort or QuickSort
+// Firefox: Merge Sort
+// Safari: Merge Sort
+
+// Basic sorting (converts to strings by default!)
+arr.sort();  // WARNING: [10, 2] sorts as [10, 2], not [2, 10]
+
+// Numeric sorting
+arr.sort((a, b) => a - b);  // Ascending
+arr.sort((a, b) => b - a);  // Descending
+
+// Sorting objects
+users.sort((a, b) => a.age - b.age);  // Sort by age
+users.sort((a, b) => a.name.localeCompare(b.name));  // Sort by name
+
+// Stable sorting in newer JS versions
+arr.sort((a, b) => a.value - b.value);  // May not be stable
+[...arr].sort((a, b) => a.value - b.value);  // Stable in modern browsers
+```
+
+### 3. Performance Tricks
+
+1. **Use insertion sort for small arrays or small partitions** in quicksort/mergesort for better performance.
+
+2. **Choose good pivot strategies for quicksort**:
+   - Median-of-three: Use the median of first, middle, and last elements
+   - Random selection: Randomly choose the pivot to avoid worst-case scenarios
+
+3. **Avoid sorting when possible**:
+   - For finding the kth smallest/largest element, use quickselect (O(n) average)
+   - For checking if an array is sorted, use a single pass (O(n))
+   - For frequency counting, use a hash map instead of sorting
+
+4. **Pre-compute keys** for complex comparisons to avoid redundant calculations.
+
+5. **Use counting sort for integer arrays** with a small range of values.
+
+### 4. Hybrid Approaches
+
+Modern sorting implementations often use hybrid approaches:
+
+1. **Timsort** (Python's built-in sort):
+   - Combines merge sort and insertion sort
+   - Exploits natural runs of sorted elements
+   - Highly efficient for real-world data
+
+2. **Introsort** (C++ STL's sort):
+   - Starts with quicksort
+   - Switches to heapsort if recursion depth exceeds a threshold
+   - Uses insertion sort for small partitions
+
+3. **Dual-Pivot Quicksort** (Java's Arrays.sort for primitives):
+   - Uses two pivots instead of one
+   - Better performance on many real-world inputs
+
+### 5. Memory Optimization
+
+1. **In-place sorting** when memory is limited:
+   - Quick sort, heap sort, or selection sort
+   - Avoid merge sort if memory is constrained
+
+2. **Block merge sort** for external sorting:
+   - Sort blocks that fit in memory
+   - Merge sorted blocks efficiently
+
+3. **Use specialized data structures**:
+   - Binary search trees for dynamic sorted data
+   - Heaps for maintaining sorted order during insertions/deletions
+
+## How to Identify Sorting Problems
+
+Look for these clues in the problem statement:
+
+1. **Explicit requirement for order**: The problem directly asks for elements to be arranged in a specific order.
+
+2. **Keywords**: Look for terms like "arrange," "order," "sequence," "rank," or "sort."
+
+3. **Binary search requirement**: If the problem requires binary search, you'll need a sorted array first.
+
+4. **Finding median, kth smallest/largest element**: These problems often involve partial sorting or algorithms like quickselect.
+
+5. **Optimization problems**: Some problems become easier when data is sorted (like finding pairs with a specific difference).
+
+6. **Frequency analysis**: Problems involving counting occurrences or finding most/least frequent elements.
+
+7. **Removing duplicates**: Sorting often makes duplicate removal more efficient.
+
+8. **Interval or range problems**: Sorting endpoints can simplify problems involving intervals or ranges.
 
 ## Real-world Applications
 
@@ -1237,6 +1362,77 @@ def test_sorting_algorithm(sort_function):
 test_sorting_algorithm(bubble_sort)
 test_sorting_algorithm(merge_sort)
 ```
+
+## How to Identify Sorting Problems
+
+Look for these clues in the problem statement:
+
+1. **Explicit requirement for order**: The problem directly asks for elements to be arranged in a specific order.
+
+2. **Keywords**: Look for terms like "arrange," "order," "sequence," "rank," or "sort."
+
+3. **Binary search requirement**: If the problem requires binary search, you'll need a sorted array first.
+
+4. **Finding median, kth smallest/largest element**: These problems often involve partial sorting or algorithms like quickselect.
+
+5. **Optimization problems**: Some problems become easier when data is sorted (like finding pairs with a specific difference).
+
+6. **Frequency analysis**: Problems involving counting occurrences or finding most/least frequent elements.
+
+7. **Removing duplicates**: Sorting often makes duplicate removal more efficient.
+
+8. **Interval or range problems**: Sorting endpoints can simplify problems involving intervals or ranges.
+
+## Common Pitfalls
+
+1. **Choosing the wrong algorithm**: Using an O(n²) algorithm like bubble sort for large datasets when an O(n log n) algorithm would be more appropriate.
+
+2. **Incorrect comparator functions**: When sorting objects or using custom comparison logic, errors in the comparator function can lead to incorrect results.
+
+   ```python
+   # Incorrect comparator for sorting by length
+   strings.sort(key=len, reverse=False)  # This sorts by ascending length
+   
+   # But this is wrong if you meant to sort by descending length
+   # Correct would be:
+   strings.sort(key=len, reverse=True)
+   ```
+
+3. **Modifying the array during sorting**: Some sorting algorithms break if the array is modified during the sorting process.
+
+4. **Stability issues**: Not considering whether stability matters for your application.
+
+   ```python
+   # Example where stability matters
+   students = [
+       {"name": "Alice", "grade": "A"},
+       {"name": "Bob", "grade": "B"},
+       {"name": "Charlie", "grade": "A"}
+   ]
+   
+   # If we sort by grade, we want Alice to still come before Charlie
+   # A stable sort guarantees this
+   ```
+
+5. **Ignoring space complexity**: Some sorting algorithms (like merge sort) require O(n) extra space, which might be problematic for very large arrays.
+
+6. **Pivot selection in quicksort**: Poor pivot selection can degrade quicksort to O(n²) time complexity.
+
+7. **Not handling edge cases**: Forgetting to handle empty arrays, single-element arrays, or arrays with all identical elements.
+
+8. **Infinite recursion**: Recursive sorting algorithms like quicksort can cause stack overflow if the base case is not properly defined.
+
+9. **Assuming input characteristics**: Assuming the input is already partially sorted or has certain properties without verification.
+
+10. **Language-specific issues**: Not understanding how built-in sort functions work in your programming language.
+
+    ```javascript
+    // JavaScript's default sort converts elements to strings
+    [10, 2, 30, 5].sort();  // Returns [10, 2, 30, 5] (incorrect)
+    
+    // Correct way:
+    [10, 2, 30, 5].sort((a, b) => a - b);  // Returns [2, 5, 10, 30]
+    ```
 
 ## Discussion Questions
 
