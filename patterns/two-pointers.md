@@ -21,63 +21,103 @@ The Two Pointers pattern uses two pointers to iterate through a data structure i
 
 ## Types of Two Pointers Approaches
 
+### Two Pointers Strategy Selector
+
+```mermaid
+graph TD
+    Start[Two Pointers Problem] --> Q1{Array/List sorted?}
+
+    Q1 -->|Yes| Q2{Looking for pairs<br/>or triplets?}
+    Q1 -->|No| Q3{Need to compare<br/>or validate?}
+
+    Q2 -->|Yes| Opposite["Opposite Direction<br/>Left ← → Right<br/>Use: Two Sum, 3Sum, Container with Water"]
+    Q2 -->|No| Q4{Need to find<br/>cycle or middle?}
+
+    Q4 -->|Yes| FastSlow["Fast & Slow Pointers<br/>Slow: +1, Fast: +2<br/>Use: Cycle detection, Find middle"]
+    Q4 -->|No| Window["Sliding Window<br/>Both move right<br/>Use: Subarrays, Substrings"]
+
+    Q3 -->|Palindrome| Expand["Expand from Center<br/>Left ← → Right<br/>Use: Palindrome validation"]
+    Q3 -->|Remove duplicates| Same["Same Direction<br/>slow, fast both →<br/>Use: Remove duplicates in-place"]
+
+    style Opposite fill:#87CEEB
+    style FastSlow fill:#FFD700
+    style Window fill:#90EE90
+    style Expand fill:#FFB6C1
+    style Same fill:#DDA0DD
+```
+
 ### 1. Opposite Direction (Left and Right)
 
 Start with one pointer at the beginning and one at the end, then move them toward each other.
 
-**Visual Representation:**
-```
-Array: [1, 2, 3, 4, 5, 6, 7, 8]
-Initial state:
-↓                 ↓
-[1, 2, 3, 4, 5, 6, 7, 8]
-left              right
+```mermaid
+graph TD
+    subgraph "Two Sum in Sorted Array"
+        Start["Array: [1, 2, 3, 4, 6, 8]<br/>Target: 10<br/>Left=0, Right=5"] --> Step1
+        Step1["arr[L] + arr[R] = 1 + 8 = 9<br/>9 < 10, move Left→"] --> Step2
+        Step2["L=1, R=5<br/>arr[L] + arr[R] = 2 + 8 = 10<br/>Found! Return [1, 5]"] --> Result["✓ Solution: indices [1, 5]"]
+    end
 
-After some iterations:
-      ↓       ↓
-[1, 2, 3, 4, 5, 6, 7, 8]
-      left    right
+    style Start fill:#e1f5ff
+    style Step1 fill:#FFE4B5
+    style Step2 fill:#FFD700
+    style Result fill:#90EE90
 ```
 
 ### 2. Same Direction (Fast and Slow)
 
 Both pointers start from the beginning but move at different speeds.
 
-**Visual Representation:**
+```mermaid
+graph TD
+    subgraph "Remove Duplicates from Sorted Array"
+        Init["Array: [1, 1, 2, 2, 3, 4, 4]<br/>Slow=0, Fast=1"] --> I1
+        I1["Fast=1: arr[1]=1 duplicate<br/>Move Fast→"] --> I2
+        I2["Fast=2: arr[2]=2 new!<br/>Slow++, arr[Slow]=arr[Fast]<br/>Array: [1, 2, 2, 2, 3, 4, 4]"] --> I3
+        I3["Continue...<br/>Result: [1, 2, 3, 4, ...]<br/>Return Slow+1 = 4"] --> Res["✓ Length of unique = 4"]
+    end
+
+    style Init fill:#e1f5ff
+    style I1 fill:#FFE4B5
+    style I2 fill:#FFD700
+    style I3 fill:#FFA500
+    style Res fill:#90EE90
 ```
-Array: [1, 2, 3, 4, 5, 6, 7, 8]
-Initial state:
-↓
-[1, 2, 3, 4, 5, 6, 7, 8]
-slow
-fast
 
-After some iterations:
-      ↓       ↓
-[1, 2, 3, 4, 5, 6, 7, 8]
-      slow    fast
+### 3. Fast and Slow Pointers (Cycle Detection)
+
+```mermaid
+graph LR
+    Start["Linked List with Cycle"] --> Algo["Floyd's Algorithm<br/>Slow: +1 step<br/>Fast: +2 steps"]
+
+    Algo --> Meet{Do they meet?}
+
+    Meet -->|No, Fast→NULL| NoCycle["No cycle detected"]
+    Meet -->|Yes, meet at node| HasCycle["Cycle detected!<br/>Continue to find cycle start"]
+
+    style Start fill:#e1f5ff
+    style Algo fill:#FFD700
+    style NoCycle fill:#FFB6C6
+    style HasCycle fill:#90EE90
 ```
 
-### 3. Sliding Window (Special Case)
+### 4. Sliding Window (Special Case)
 
-A variation where both pointers move in the same direction, maintaining a "window" between them.
+```mermaid
+graph TD
+    subgraph "Longest Substring Without Repeating Characters"
+        S1["String: 'abcabcbb'<br/>Left=0, Right=0, MaxLen=0"] --> S2
+        S2["Expand: Right moves<br/>Window: 'abc', MaxLen=3"] --> S3
+        S3["Right=3: 'a' duplicate!<br/>Shrink: Left moves<br/>Remove duplicates"] --> S4
+        S4["Continue expanding...<br/>Final MaxLen=3"] --> SR["✓ Answer: 3"]
+    end
 
-**Visual Representation:**
+    style S1 fill:#e1f5ff
+    style S2 fill:#FFD700
+    style S3 fill:#FFA500
+    style S4 fill:#90EE90
+    style SR fill:#90EE90
 ```
-Array: [1, 2, 3, 4, 5, 6, 7, 8]
-Initial state:
-↓ ↓
-[1, 2, 3, 4, 5, 6, 7, 8]
-L R
-
-After expanding window:
-↓     ↓
-[1, 2, 3, 4, 5, 6, 7, 8]
-L     R
-
-After sliding window:
-  ↓     ↓
-[1, 2, 3, 4, 5, 6, 7, 8]
   L     R
 ```
 

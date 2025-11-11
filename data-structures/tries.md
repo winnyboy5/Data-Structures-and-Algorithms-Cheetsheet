@@ -38,6 +38,336 @@ Trie containing the words "cat", "car", "dog", "door":
 4. **Prefix Search**: Find all words with a given prefix
 5. **Autocomplete**: Suggest completions for a given prefix
 
+## How to Approach Trie Problems
+
+### Step 1: Identify if a Trie is Needed
+
+```mermaid
+graph TD
+    Start[Problem Analysis] --> Q1{Working with<br/>strings/words?}
+
+    Q1 -->|No| Other[Not a trie problem]
+    Q1 -->|Yes| Q2{Need prefix-based<br/>operations?}
+
+    Q2 -->|Yes| Trie1[✓ Use Trie]
+    Q2 -->|No| Q3{Need autocomplete<br/>or suggestions?}
+
+    Q3 -->|Yes| Trie2[✓ Use Trie]
+    Q3 -->|No| Q4{Search for patterns<br/>or word validation?}
+
+    Q4 -->|Yes| Q5{With wildcards?}
+    Q4 -->|No| Hash[Consider Hash Table]
+
+    Q5 -->|Yes| Trie3[✓ Use Trie<br/>with backtracking]
+    Q5 -->|No| Q6{Multiple string<br/>matching?}
+
+    Q6 -->|Yes| Trie4[✓ Use Trie]
+    Q6 -->|No| Simple[Simple string ops<br/>may suffice]
+
+    style Trie1 fill:#90EE90
+    style Trie2 fill:#90EE90
+    style Trie3 fill:#87CEEB
+    style Trie4 fill:#90EE90
+    style Other fill:#FFB6C1
+    style Hash fill:#FFD700
+    style Simple fill:#DDA0DD
+```
+
+### Step 2: Common Trie Problem Patterns
+
+#### Pattern 1: Dictionary Operations
+
+```
+Problem indicators:
+- Add/remove words from dictionary
+- Check if word exists
+- Validate words
+
+Approach:
+1. Build trie with all dictionary words
+2. For search: traverse character by character
+3. Check end-of-word flag at final node
+
+Key operations:
+- Insert: O(m) where m = word length
+- Search: O(m)
+- Space: O(ALPHABET_SIZE * N * M) where N = number of words
+
+Template:
+class TrieNode:
+    def __init__(self):
+        self.children = {}
+        self.is_end = False
+
+trie = TrieNode()
+
+# Insert
+def insert(word):
+    node = trie
+    for char in word:
+        if char not in node.children:
+            node.children[char] = TrieNode()
+        node = node.children[char]
+    node.is_end = True
+
+# Search
+def search(word):
+    node = trie
+    for char in word:
+        if char not in node.children:
+            return False
+        node = node.children[char]
+    return node.is_end
+```
+
+#### Pattern 2: Prefix Matching & Autocomplete
+
+```
+Problem indicators:
+- Find all words with prefix
+- Autocomplete feature
+- Suggest words
+
+Approach:
+1. Navigate to prefix node
+2. DFS/BFS from prefix node
+3. Collect all words (nodes with is_end = True)
+
+Template:
+def get_words_with_prefix(prefix):
+    # Navigate to prefix node
+    node = trie
+    for char in prefix:
+        if char not in node.children:
+            return []
+        node = node.children[char]
+
+    # DFS to collect all words
+    result = []
+    def dfs(node, path):
+        if node.is_end:
+            result.append(prefix + path)
+        for char, child in node.children.items():
+            dfs(child, path + char)
+
+    dfs(node, "")
+    return result
+```
+
+#### Pattern 3: Word Search with Wildcards
+
+```
+Problem indicators:
+- Search with '.' matching any character
+- Pattern matching
+- Regex-like operations
+
+Approach:
+1. Use backtracking with trie
+2. For wildcard, try all children
+3. For regular char, follow specific path
+
+Template:
+def search_with_wildcard(word):
+    def dfs(node, i):
+        if i == len(word):
+            return node.is_end
+
+        char = word[i]
+        if char == '.':
+            # Try all children
+            for child in node.children.values():
+                if dfs(child, i + 1):
+                    return True
+            return False
+        else:
+            # Follow specific path
+            if char not in node.children:
+                return False
+            return dfs(node.children[char], i + 1)
+
+    return dfs(trie, 0)
+```
+
+#### Pattern 4: Board/Grid Word Search
+
+```
+Problem indicators:
+- Find words in 2D grid
+- Words can be formed by adjacent cells
+- Multiple words to find
+
+Approach:
+1. Build trie with all target words
+2. DFS from each cell
+3. Prune search using trie
+4. Much faster than searching each word separately
+
+Template:
+def find_words(board, words):
+    # Build trie
+    trie = build_trie(words)
+    result = []
+    rows, cols = len(board), len(board[0])
+
+    def dfs(r, c, node, path):
+        if node.is_end:
+            result.append(path)
+            node.is_end = False  # Avoid duplicates
+
+        if r < 0 or r >= rows or c < 0 or c >= cols:
+            return
+
+        char = board[r][c]
+        if char not in node.children:
+            return
+
+        board[r][c] = '#'  # Mark visited
+
+        # Explore 4 directions
+        for dr, dc in [(0,1), (1,0), (0,-1), (-1,0)]:
+            dfs(r+dr, c+dc, node.children[char], path+char)
+
+        board[r][c] = char  # Restore
+
+    for i in range(rows):
+        for j in range(cols):
+            dfs(i, j, trie, "")
+
+    return result
+```
+
+### Step 3: Trie vs. Other Data Structures
+
+```mermaid
+graph TD
+    Problem[String Problem] --> Op{Main Operation?}
+
+    Op -->|Exact match| Hash[Hash Table<br/>O(1) lookup<br/>No prefix support]
+    Op -->|Prefix operations| Compare{Compare features}
+    Op -->|Range queries| BST[Binary Search Tree<br/>Sorted order]
+    Op -->|Pattern matching| Consider{Pattern type?}
+
+    Compare --> Space{Space constraint?}
+    Space -->|Critical| Hash2[Hash Table<br/>Less space for<br/>few words]
+    Space -->|Not critical| Trie[✓ Trie<br/>Fast prefix ops<br/>Autocomplete]
+
+    Consider -->|Wildcards| Trie2[✓ Trie with<br/>backtracking]
+    Consider -->|Regex| Regex[Regex engine]
+
+    style Trie fill:#90EE90
+    style Trie2 fill:#90EE90
+    style Hash fill:#FFD700
+    style Hash2 fill:#FFD700
+    style BST fill:#87CEEB
+    style Regex fill:#DDA0DD
+```
+
+### Step 4: Problem-Solving Framework for Tries
+
+```
+STEP 1: Analyze the Problem
+□ Are we working with multiple strings/words?
+□ Do we need prefix-based operations?
+□ Is autocomplete/suggestion needed?
+□ Are there pattern matching requirements?
+
+STEP 2: Design the Trie Structure
+□ What does each node store?
+  - Children (dict/array)
+  - End-of-word flag
+  - Additional data (count, word itself, etc.)
+□ What's the alphabet size?
+  - Lowercase letters: 26
+  - All letters: 52
+  - Alphanumeric: 62
+  - Custom: varies
+
+STEP 3: Choose the Approach
+□ Simple trie: Basic insert/search/prefix
+□ Trie + DFS: Collect all words with prefix
+□ Trie + Backtracking: Pattern matching
+□ Trie + Grid DFS: Board word search
+
+STEP 4: Optimize
+□ Can we prune branches early?
+□ Do we need to store the full word at leaf nodes?
+□ Can we use array instead of dict for fixed alphabet?
+□ Should we compress the trie (suffix tree)?
+
+STEP 5: Implementation Checklist
+□ Handle empty strings
+□ Mark end-of-word correctly
+□ Don't forget to backtrack when needed
+□ Clean up/delete properly to avoid memory leaks
+```
+
+### Step 5: When to Use Trie vs Hash Table
+
+| Criteria | Use Trie | Use Hash Table |
+|----------|----------|---------------|
+| Prefix queries | ✓ Excellent | ✗ Not supported |
+| Autocomplete | ✓ Natural fit | ✗ Inefficient |
+| Exact lookup | O(m) | ✓ O(1) average |
+| Space efficiency | Depends on overlap | ✓ Better for few words |
+| Insert/Delete | O(m) | ✓ O(1) average |
+| All words with prefix | ✓ O(p + n) | ✗ O(N) scan needed |
+| Sorted order | ✓ DFS gives sorted | ✗ Not ordered |
+| Pattern matching | ✓ With backtracking | ✗ No support |
+
+*m = word length, p = prefix length, n = results, N = total words*
+
+### Step 6: Common Mistakes to Avoid
+
+```
+1. NOT MARKING END OF WORD
+   ⚠ node.children['e'] exists doesn't mean "e" is a word
+   ✓ Always check node.is_end flag
+
+2. MEMORY LEAKS ON DELETE
+   ⚠ Not removing empty nodes after delete
+   ✓ Recursively delete unused nodes
+
+3. WRONG ALPHABET SIZE
+   ⚠ Using array of size 26 for mixed case strings
+   ✓ Match data structure to input
+
+4. NOT HANDLING DUPLICATES
+   ⚠ Adding same word multiple times
+   ✓ Check is_end or use count
+
+5. INEFFICIENT TRAVERSAL
+   ⚠ Recreating trie for each query
+   ✓ Build once, query many times
+
+6. FORGETTING TO RESTORE STATE
+   ⚠ In grid problems, not unmarking cells
+   ✓ Always backtrack properly
+```
+
+### Decision Matrix: Trie Problem Approach
+
+```mermaid
+graph TD
+    Start[Trie Problem] --> Q1{Number of<br/>operations?}
+
+    Q1 -->|Few inserts,<br/>many queries| Build[Build trie once<br/>Query many times]
+    Q1 -->|Many inserts<br/>and queries| Dynamic[Dynamic trie<br/>Efficient insert/search]
+
+    Build --> Q2{Query type?}
+    Dynamic --> Q2
+
+    Q2 -->|Exact match| Simple[Simple trie<br/>with is_end flag]
+    Q2 -->|Prefix match| DFS[Trie + DFS<br/>to collect words]
+    Q2 -->|Pattern match| Back[Trie + Backtracking<br/>for wildcards]
+    Q2 -->|In grid| Grid[Trie + Grid DFS<br/>with pruning]
+
+    style Simple fill:#90EE90
+    style DFS fill:#87CEEB
+    style Back fill:#FFD700
+    style Grid fill:#DDA0DD
+```
+
 ## Implementation in Python and JavaScript
 
 ### Python

@@ -4,23 +4,64 @@ The Sliding Window pattern is a technique used to process arrays or lists in a s
 
 ## Visual Representation
 
-```
-Array: [2, 6, 4, 8, 10, 9, 15]
-Window size: 3
+### Fixed-Size Sliding Window
 
-Iteration 1: [2, 6, 4], 8, 10, 9, 15
-Iteration 2: 2, [6, 4, 8], 10, 9, 15
-Iteration 3: 2, 6, [4, 8, 10], 9, 15
-Iteration 4: 2, 6, 4, [8, 10, 9], 15
-Iteration 5: 2, 6, 4, 8, [10, 9, 15]
+```mermaid
+graph TD
+    subgraph "Array: [2, 6, 4, 8, 10, 9, 15], Window Size: 3"
+        Step1["Step 1: [2, 6, 4] = 12<br/>Left=0, Right=2"] --> Step2
+        Step2["Step 2: [6, 4, 8] = 18<br/>Left=1, Right=3<br/>Remove 2, Add 8"] --> Step3
+        Step3["Step 3: [4, 8, 10] = 22<br/>Left=2, Right=4<br/>Remove 6, Add 10"] --> Step4
+        Step4["Step 4: [8, 10, 9] = 27<br/>Left=3, Right=5<br/>Remove 4, Add 9"] --> Step5
+        Step5["Step 5: [10, 9, 15] = 34 ✓ MAX<br/>Left=4, Right=6<br/>Remove 8, Add 15"]
+    end
+
+    style Step5 fill:#90EE90
+```
+
+### Dynamic-Size Sliding Window
+
+```mermaid
+graph TD
+    subgraph "Find Longest Substring Without Repeating: 'abcabcbb'"
+        S1["Window: 'a'<br/>Left=0, Right=0, Max=1"] --> S2
+        S2["Window: 'ab'<br/>Left=0, Right=1, Max=2"] --> S3
+        S3["Window: 'abc'<br/>Left=0, Right=2, Max=3 ✓"] --> S4
+        S4["'a' repeats!<br/>Shrink: Left=1, Right=3<br/>Window: 'bca'"] --> S5
+        S5["'b' repeats!<br/>Shrink: Left=2, Right=4<br/>Window: 'cab'"] --> Continue["Continue..."]
+    end
+
+    style S3 fill:#90EE90
 ```
 
 ## When to Use Sliding Window
 
-- When dealing with contiguous sequences of elements in arrays, strings, or linked lists
-- When you need to find a subarray or substring that meets certain conditions
-- When you need to calculate something among all subarrays or substrings of a specific size
-- When the problem involves finding the maximum, minimum, or optimal value of something in a subarray or substring
+```mermaid
+graph TD
+    Start[Problem Analysis] --> Q1{Contiguous<br/>sequence needed?}
+
+    Q1 -->|Yes| Q2{Fixed size<br/>or variable?}
+    Q1 -->|No| NotSW[Not Sliding Window]
+
+    Q2 -->|Fixed size K| Fixed["Fixed Window<br/>- Max/min sum of K elements<br/>- Average of K elements<br/>- K-size subarray problems"]
+
+    Q2 -->|Variable size| Q3{What constraint?}
+
+    Q3 -->|Sum/Product| Dynamic1["Dynamic Window<br/>- Subarray with sum = target<br/>- Smallest subarray with sum ≥ target"]
+    Q3 -->|Unique elements| Dynamic2["Dynamic Window<br/>- Longest substring without repeats<br/>- Longest substring with K distinct chars"]
+    Q3 -->|Character count| Dynamic3["Dynamic Window<br/>- Longest substring with at most K chars<br/>- Minimum window substring"]
+
+    style Fixed fill:#87CEEB
+    style Dynamic1 fill:#90EE90
+    style Dynamic2 fill:#FFD700
+    style Dynamic3 fill:#FFB6C1
+```
+
+**Key Indicators:**
+- Contiguous sequences (subarrays, substrings)
+- Find maximum, minimum, or optimal value
+- Calculate something among all subarrays of specific size
+- "Longest," "shortest," "maximum," "minimum" keywords
 
 ## Types of Sliding Windows
 
@@ -28,9 +69,47 @@ Iteration 5: 2, 6, 4, 8, [10, 9, 15]
 
 The window size remains constant throughout the algorithm.
 
+**Pattern Template:**
+```python
+def fixed_window(arr, k):
+    # Initialize window
+    window_value = initial_calculation(arr[:k])
+    result = window_value
+
+    # Slide window
+    for i in range(k, len(arr)):
+        # Remove left element, add right element
+        window_value = window_value - arr[i-k] + arr[i]
+        result = update_result(result, window_value)
+
+    return result
+```
+
 ### 2. Dynamic-Size Window
 
 The window size can grow or shrink based on certain conditions.
+
+**Pattern Template:**
+```python
+def dynamic_window(arr, condition):
+    left = 0
+    window_state = initial_state()
+    result = initial_result()
+
+    for right in range(len(arr)):
+        # Expand window
+        add_to_window(arr[right], window_state)
+
+        # Shrink window while condition violated
+        while not condition_met(window_state):
+            remove_from_window(arr[left], window_state)
+            left += 1
+
+        # Update result
+        result = update_result(result, window_state)
+
+    return result
+```
 
 ## Common Problems and Solutions
 
@@ -502,4 +581,133 @@ def sliding_window(arr):
 3. **Image Processing**: Applying filters or convolutions to images using a sliding window.
 4. **Natural Language Processing**: Analyzing text using n-grams or other sliding window techniques.
 5. **Anomaly Detection**: Detecting anomalies in time series data using a sliding window approach.
-6. **Rate Limiting**: Implementing rate limiting algorithms using a sliding window to track requests over time. 
+6. **Rate Limiting**: Implementing rate limiting algorithms using a sliding window to track requests over time.
+
+## 💡 Tips and Tricks
+
+### Quick Decision Matrix
+
+```mermaid
+graph LR
+    Start[Sliding Window Problem] --> Q1{Know window size?}
+
+    Q1 -->|Yes, size K| Tip1["✓ Use Fixed Window<br/>• Calculate first window<br/>• Slide: remove left, add right<br/>• O(n) time, O(1) space"]
+
+    Q1 -->|No, find optimal| Q2{What to track?}
+
+    Q2 -->|Sum/Count| Tip2["✓ Use HashMap + Counters<br/>• Track frequencies<br/>• Expand until invalid<br/>• Shrink while invalid"]
+
+    Q2 -->|Characters| Tip3["✓ Use Set/Map<br/>• Track unique elements<br/>• Use set for uniqueness<br/>• Use map for frequencies"]
+
+    style Tip1 fill:#90EE90
+    style Tip2 fill:#FFD700
+    style Tip3 fill:#87CEEB
+```
+
+### Pro Tips
+
+**1. Always Think Incremental**
+```python
+# ❌ Bad: Recalculating entire window
+window_sum = sum(arr[left:right+1])
+
+# ✓ Good: Incremental update
+window_sum = window_sum - arr[left] + arr[right]
+```
+
+**2. Use Hash Maps for Character/Element Tracking**
+```python
+# Track frequencies for anagram problems
+char_count = {}  # or defaultdict(int)
+char_count[char] = char_count.get(char, 0) + 1
+```
+
+**3. Two Conditions for Window Validity**
+- **Expand condition**: When can we add to window?
+- **Shrink condition**: When must we remove from window?
+
+**4. Track Both Current and Best**
+```python
+max_length = 0  # Best seen so far
+current_length = right - left + 1  # Current window
+max_length = max(max_length, current_length)
+```
+
+**5. Handle Edge Cases First**
+```python
+if not arr or k <= 0:
+    return []  # or appropriate default
+```
+
+### Common Mistakes to Avoid
+
+```mermaid
+graph TD
+    Mistakes[Common Mistakes] --> M1[Off-by-One Errors]
+    Mistakes --> M2[Forgetting to Update Result]
+    Mistakes --> M3[Not Shrinking Window]
+    Mistakes --> M4[Wrong Window Size Calculation]
+
+    M1 --> M1Fix["Fix: Use 'right - left + 1'<br/>for window size, not 'right - left'"]
+    M2 --> M2Fix["Fix: Update result after<br/>every window adjustment"]
+    M3 --> M3Fix["Fix: Use 'while' loop<br/>for shrinking, not 'if'"]
+    M4 --> M4Fix["Fix: Check condition:<br/>window_end >= k - 1"]
+
+    style M1Fix fill:#90EE90
+    style M2Fix fill:#90EE90
+    style M3Fix fill:#90EE90
+    style M4Fix fill:#90EE90
+```
+
+### Problem-Specific Tricks
+
+**For "Longest" Problems:**
+- Use maximum to track best result
+- Expand aggressively, shrink minimally
+- Often use sets or maps to track uniqueness
+
+**For "Shortest" Problems:**
+- Use minimum to track best result
+- Shrink aggressively once condition met
+- Often involves sum or count thresholds
+
+**For "All Subarrays" Problems:**
+- May need to check at every position
+- Result often accumulates counts
+- Consider number of valid windows ending at each position
+
+### Performance Optimization
+
+```mermaid
+graph TD
+    Opt[Optimization Tips] --> O1["Use appropriate data structures"]
+    Opt --> O2["Avoid nested loops in window"]
+    Opt --> O3["Update incrementally"]
+
+    O1 --> O1D["• Set for O(1) lookup<br/>• Array for fixed size<br/>• HashMap for frequencies"]
+    O2 --> O2D["• Each element processed once<br/>• O(n) overall complexity"]
+    O3 --> O3D["• Add/remove one element<br/>• Don't recalculate entire window"]
+
+    style O1D fill:#E0FFE0
+    style O2D fill:#FFE0E0
+    style O3D fill:#E0F5FF
+```
+
+### Complexity Analysis Rules
+
+- **Time Complexity**: O(n) where n = array/string length
+  - Each element added once, removed once
+  - Even with while loop for shrinking, total O(2n) = O(n)
+
+- **Space Complexity**:
+  - Fixed window: O(1)
+  - Dynamic with char tracking: O(k) where k = unique characters
+  - With all elements: O(n) worst case
+
+### Interview Tips
+
+1. **Clarify the problem**: Fixed or dynamic window?
+2. **Identify the condition**: What makes a window valid/invalid?
+3. **Choose data structure**: Array sum? Use variable. Characters? Use HashMap.
+4. **Code the template**: Start with expand, add shrink if needed
+5. **Test edge cases**: Empty input, single element, all same elements 

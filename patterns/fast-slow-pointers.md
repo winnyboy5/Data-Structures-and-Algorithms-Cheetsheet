@@ -4,30 +4,84 @@ The Fast & Slow Pointers pattern (also known as the Hare & Tortoise algorithm) u
 
 ## Visual Representation
 
+### Fast & Slow Pointer Movement
+
+```mermaid
+graph LR
+    subgraph "Iteration 1"
+        N1_1["1<br/>S,F"] --> N2_1["2"] --> N3_1["3"] --> N4_1["4"] --> N5_1["5"]
+    end
+
+    subgraph "Iteration 2"
+        N1_2["1"] --> N2_2["2<br/>S"] --> N3_2["3"] --> N4_2["4<br/>F"] --> N5_2["5"]
+    end
+
+    subgraph "Iteration 3"
+        N1_3["1"] --> N2_3["2"] --> N3_3["3<br/>S"] --> N4_3["4"] --> N5_3["5<br/>F"]
+    end
+
+    style N1_1 fill:#FFD700
+    style N2_2 fill:#90EE90
+    style N4_2 fill:#87CEEB
+    style N3_3 fill:#90EE90
+    style N5_3 fill:#87CEEB
 ```
-Linked List with a cycle:
 
-1 → 2 → 3 → 4 → 5 → 6
-        ↑         ↓
-        9 ← 8 ← 7
+### Cycle Detection Visual
 
-Initial state:
-1 → 2 → 3 → 4 → 5 → 6
-↑       ↑         ↓
-S,F     F         ↓
-        9 ← 8 ← 7
+```mermaid
+graph TD
+    Start["Linked List: 1→2→3→4→5→3 (cycle)"] --> Init
+    Init["Initialize:<br/>slow = head<br/>fast = head"] --> Move1
 
-After some iterations:
-1 → 2 → 3 → 4 → 5 → 6
-        ↑       ↑ ↓
-        S       F ↓
-        9 ← 8 ← 7
+    Move1["Move pointers:<br/>slow: 1→2<br/>fast: 1→2→3"] --> Check1{slow == fast?}
+    Check1 -->|No| Move2
 
-Eventually:
-1 → 2 → 3 → 4 → 5 → 6
-        ↑         ↓
-        S,F       ↓
-        9 ← 8 ← 7
+    Move2["Move pointers:<br/>slow: 2→3<br/>fast: 3→4→5"] --> Check2{slow == fast?}
+    Check2 -->|No| Move3
+
+    Move3["Move pointers:<br/>slow: 3→4<br/>fast: 5→3→4"] --> Check3{slow == fast?}
+    Check3 -->|Yes| Cycle["✓ Cycle detected!<br/>They met at node 4"]
+
+    NoCycleExample["No Cycle Example:<br/>1→2→3→4→NULL"] --> NCInit["slow = head, fast = head"]
+    NCInit --> NCMove["fast reaches NULL<br/>before meeting slow"]
+    NCMove --> NoCycle["✗ No cycle"]
+
+    style Cycle fill:#FFB6C6
+    style NoCycle fill:#90EE90
+```
+
+### Finding Middle Element
+
+```mermaid
+graph LR
+    subgraph "Find Middle of [1,2,3,4,5]"
+        Step1["slow=1, fast=1"] --> Step2["slow=2, fast=3"]
+        Step2 --> Step3["slow=3, fast=5"]
+        Step3 --> Result["fast at end<br/>slow at middle: 3 ✓"]
+    end
+
+    style Result fill:#90EE90
+```
+
+### Pattern Decision Tree
+
+```mermaid
+graph TD
+    Problem[Linked List Problem] --> Q1{What to find?}
+
+    Q1 -->|Detect cycle| Cycle["Fast & Slow Pointers<br/>Move until meet or NULL<br/>O(n) time, O(1) space"]
+
+    Q1 -->|Find middle| Middle["Fast & Slow Pointers<br/>Fast moves 2x speed<br/>When fast ends, slow at middle"]
+
+    Q1 -->|Find kth from end| Kth["Two Pointers<br/>Move fast k steps ahead<br/>Then move both together"]
+
+    Q1 -->|Check palindrome| Palindrome["1. Find middle (fast/slow)<br/>2. Reverse second half<br/>3. Compare both halves"]
+
+    style Cycle fill:#FFD700
+    style Middle fill:#87CEEB
+    style Kth fill:#90EE90
+    style Palindrome fill:#FFB6C1
 ```
 
 ## When to Use Fast & Slow Pointers

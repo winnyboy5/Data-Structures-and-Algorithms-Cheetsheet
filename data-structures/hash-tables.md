@@ -4,31 +4,62 @@ A hash table (also known as a hash map) is a data structure that implements an a
 
 ## Visual Representation
 
+### Hash Table Structure
+
+```mermaid
+graph TD
+    subgraph "Hash Table with Separate Chaining"
+        Key1["Key: 'John'"] --> Hash1[Hash Function]
+        Hash1 --> Index1["Index: 1"]
+        Index1 --> Bucket1["'John': 25"]
+
+        Key2["Key: 'Sarah'"] --> Hash2[Hash Function]
+        Hash2 --> Index3["Index: 3"]
+        Index3 --> Bucket3A["'Sarah': 30"]
+        Bucket3A -.Collision!.-> Bucket3B["'Mike': 35"]
+
+        Key3["Key: 'Lisa'"] --> Hash3[Hash Function]
+        Hash3 --> Index5["Index: 5"]
+        Index5 --> Bucket5["'Lisa': 28"]
+    end
+
+    style Bucket3A fill:#FFB6C6
+    style Bucket3B fill:#FFB6C6
+    style Bucket1 fill:#90EE90
+    style Bucket5 fill:#90EE90
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                         Hash Table                          │
-├───────┬───────────────────────────────────────────────────┐ │
-│ Index │                      Bucket                       │ │
-├───────┼───────────────────────────────────────────────────┤ │
-│   0   │                                                   │ │
-├───────┼───────────────────────────────────────────────────┤ │
-│   1   │ ┌─────────────┐                                   │ │
-│       │ │ "John": 25  │                                   │ │
-│       │ └─────────────┘                                   │ │
-├───────┼───────────────────────────────────────────────────┤ │
-│   2   │                                                   │ │
-├───────┼───────────────────────────────────────────────────┤ │
-│   3   │ ┌─────────────┐  ┌─────────────┐                  │ │
-│       │ │ "Sarah": 30 │→ │ "Mike": 35  │                  │ │
-│       │ └─────────────┘  └─────────────┘                  │ │
-├───────┼───────────────────────────────────────────────────┤ │
-│   4   │                                                   │ │
-├───────┼───────────────────────────────────────────────────┤ │
-│   5   │ ┌─────────────┐                                   │ │
-│       │ │ "Lisa": 28  │                                   │ │
-│       │ └─────────────┘                                   │ │
-└───────┴───────────────────────────────────────────────────┘ │
-└─────────────────────────────────────────────────────────────┘
+
+### Hash Function Process
+
+```mermaid
+graph LR
+    Input["Input Key:<br/>'hello'"] --> Hash["Hash Function<br/>h(key) = sum(ASCII) % size"]
+    Hash --> Computation["104+101+108+108+111 = 532<br/>532 % 10 = 2"]
+    Computation --> Index["Index: 2"]
+    Index --> Access["Access bucket[2]"]
+
+    style Hash fill:#FFD700
+    style Index fill:#90EE90
+```
+
+### Collision Resolution Methods
+
+```mermaid
+graph TD
+    Collision[Collision Detected] --> Method{Resolution Method?}
+
+    Method -->|Separate Chaining| Chain["Linked List at Bucket<br/>• Each bucket = linked list<br/>• Add to list<br/>• O(n) worst case lookup"]
+
+    Method -->|Open Addressing| Open["Probe for Empty Slot<br/>• Linear probing<br/>• Quadratic probing<br/>• Double hashing"]
+
+    Chain --> ChainPros["Pros:<br/>✓ Simple<br/>✓ No clustering<br/>✓ Can exceed load factor"]
+
+    Open --> OpenPros["Pros:<br/>✓ Better cache<br/>✓ No pointers<br/>✓ Less memory"]
+
+    style Chain fill:#87CEEB
+    style Open fill:#FFD700
+    style ChainPros fill:#90EE90
+    style OpenPros fill:#90EE90
 ```
 
 ## Key Components

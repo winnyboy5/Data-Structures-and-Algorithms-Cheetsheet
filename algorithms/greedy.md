@@ -4,6 +4,7 @@ Greedy algorithms make locally optimal choices at each step with the hope of fin
 
 ## Table of Contents
 - [Understanding Greedy Algorithms](#understanding-greedy-algorithms)
+- [How to Approach Greedy Problems](#how-to-approach-greedy-problems)
 - [When to Use Greedy Algorithms](#when-to-use-greedy-algorithms)
 - [Common Greedy Algorithm Problems](#common-greedy-algorithm-problems)
 - [Greedy vs. Dynamic Programming](#greedy-vs-dynamic-programming)
@@ -40,6 +41,321 @@ Step 3: Choose the largest coin ≤ 1: 1
         Coins used: [25, 10, 1]
 
 Result: 3 coins [25, 10, 1]
+```
+
+## How to Approach Greedy Problems
+
+### Step 1: Identify if Greedy Works
+
+```mermaid
+graph TD
+    Start[Problem Analysis] --> Q1{Is it an<br/>optimization problem?}
+
+    Q1 -->|No| NotGreedy[Not a greedy problem]
+    Q1 -->|Yes| Q2{Can you make<br/>local optimal choice?}
+
+    Q2 -->|No| DP[Consider Dynamic Programming]
+    Q2 -->|Yes| Q3{Does local optimal<br/>lead to global optimal?}
+
+    Q3 -->|Unsure| Proof[Need to prove<br/>greedy choice property]
+    Q3 -->|Yes| Q4{Has optimal<br/>substructure?}
+
+    Q4 -->|Yes| Greedy[✓ Use Greedy Algorithm]
+    Q4 -->|No| Reconsider[Reconsider approach]
+
+    Proof --> Test{Can prove or<br/>verify with examples?}
+    Test -->|Yes| Greedy
+    Test -->|No| DP
+
+    style Greedy fill:#90EE90
+    style DP fill:#FFD700
+    style NotGreedy fill:#FFB6C1
+    style Reconsider fill:#FFA500
+```
+
+### Step 2: The Greedy Problem-Solving Framework
+
+#### Phase 1: Understanding & Verification
+
+```
+STEP 1: Identify the Optimization Goal
+□ What are we trying to maximize/minimize?
+□ Examples: maximum value, minimum cost, maximum activities
+
+STEP 2: Define the Greedy Choice
+□ What is the locally optimal choice at each step?
+□ Common choices:
+  - Largest/smallest value
+  - Earliest/latest finish time
+  - Best ratio (value/weight)
+  - Closest/farthest distance
+
+STEP 3: Verify Greedy Choice Property
+□ Does making the locally optimal choice lead to a globally optimal solution?
+□ Methods to verify:
+  - Proof by contradiction
+  - Exchange argument
+  - Mathematical induction
+  - Test with multiple examples
+
+STEP 4: Check for Optimal Substructure
+□ After making a greedy choice, is the remaining problem a smaller instance of the same problem?
+□ Can we solve the subproblem independently?
+```
+
+#### Phase 2: Implementation Strategy
+
+```mermaid
+graph TD
+    A[Start] --> B[Sort or Organize Data<br/>by greedy criterion]
+    B --> C[Initialize Result]
+    C --> D[Iterate Through Options]
+    D --> E{Is choice<br/>valid & optimal?}
+    E -->|No| D
+    E -->|Yes| F[Make Greedy Choice<br/>Add to result]
+    F --> G{Problem<br/>complete?}
+    G -->|No| D
+    G -->|Yes| H[Return Result]
+
+    style A fill:#FFD700
+    style B fill:#87CEEB
+    style F fill:#90EE90
+    style H fill:#DDA0DD
+```
+
+### Step 3: How to Prove Greedy Works
+
+#### Method 1: Greedy Choice Property (Proof by Contradiction)
+
+```
+Template:
+1. Assume there exists an optimal solution that doesn't include the greedy choice
+2. Show you can modify that solution to include the greedy choice
+3. Prove the modified solution is at least as good as the original
+4. Therefore, a solution with the greedy choice is optimal
+
+Example: Activity Selection
+1. Assume optimal solution O doesn't include activity with earliest finish time (A1)
+2. Let A2 be the first activity in O
+3. Since A1 finishes earliest, we can replace A2 with A1
+4. This still allows all subsequent activities → contradiction
+```
+
+#### Method 2: Exchange Argument
+
+```
+Template:
+1. Take any optimal solution
+2. Show that you can exchange elements to match greedy solution
+3. Prove that each exchange maintains or improves optimality
+4. Therefore, greedy solution is optimal
+
+Example: Fractional Knapsack
+1. Take optimal solution with items not in value/weight ratio order
+2. Exchange lower ratio item with higher ratio item
+3. This increases total value → previous solution wasn't optimal
+4. Therefore, sorting by ratio is correct
+```
+
+#### Method 3: "Staying Ahead" Argument
+
+```
+Template:
+1. Show that after each step, greedy is at least as good as any other solution
+2. Prove this property is maintained throughout
+3. Therefore, at the end, greedy is optimal
+
+Example: Coin Change (standard denominations)
+1. After k coins, greedy uses minimum coins
+2. This property holds for k+1 coins
+3. Therefore, greedy is optimal
+```
+
+### Step 4: Common Greedy Patterns & Decision Making
+
+#### Pattern 1: Selection/Scheduling
+
+```
+Problem indicators:
+- Select maximum number of activities
+- Schedule jobs to minimize time
+- Assign resources efficiently
+
+Greedy criteria to consider:
+□ Earliest finish time (Activity Selection)
+□ Shortest duration (Shortest Job First)
+□ Earliest deadline (Deadline Scheduling)
+□ Smallest overlap (Interval Scheduling)
+
+Template:
+1. Sort by chosen criterion
+2. Select first item
+3. For each next item:
+   - If compatible with current selection, add it
+   - Otherwise, skip it
+```
+
+#### Pattern 2: Optimization by Sorting
+
+```
+Problem indicators:
+- Maximize/minimize some value
+- Involves weights, costs, or values
+- Order matters
+
+Greedy criteria to consider:
+□ Sort by value (descending for max, ascending for min)
+□ Sort by cost or weight
+□ Sort by ratio (value/weight)
+
+Template:
+1. Calculate greedy criterion for each element
+2. Sort by criterion
+3. Iterate in sorted order
+4. Make greedy choice at each step
+```
+
+#### Pattern 3: Two-Pointer/Boundary Approach
+
+```
+Problem indicators:
+- Pairs or combinations needed
+- Need to satisfy constraints
+- Work from extremes
+
+Greedy strategy:
+□ Start from both ends
+□ Move pointers based on greedy choice
+□ Make optimal decision at each step
+
+Example: Container With Most Water
+1. Start with widest container (left=0, right=n-1)
+2. Move pointer of shorter height (greedy choice)
+3. Keep track of maximum area
+```
+
+#### Pattern 4: State Change/Transformation
+
+```
+Problem indicators:
+- Transform from one state to another
+- Minimize operations
+- Step-by-step changes
+
+Greedy strategy:
+□ Always make the most beneficial change
+□ Prefer operations that reduce distance to goal
+□ Avoid operations that increase work
+
+Example: Jump Game
+1. Keep track of farthest reachable position
+2. Always update to maximum reachable from current
+3. Greedily extend reach
+```
+
+### Step 5: Testing Your Greedy Solution
+
+#### Verification Checklist
+
+```
+□ Test with trivial cases (n=0, n=1, n=2)
+□ Test with case where greedy might fail
+□ Test with multiple optimal solutions (does greedy find one?)
+□ Test with edge cases (all same values, reverse order)
+□ Compare with brute force on small inputs
+
+Counter-Example Test Cases:
+1. Does greedy work with unsorted input?
+2. Does greedy work when optimal requires looking ahead?
+3. Does greedy work with negative values?
+4. Does greedy work with duplicate values?
+```
+
+### Decision Flow: Greedy or Not?
+
+```mermaid
+graph TD
+    Start[Optimization Problem] --> Q1{Can identify<br/>clear greedy choice?}
+
+    Q1 -->|No| NotGreedy[Not greedy<br/>Try DP or other]
+    Q1 -->|Yes| Q2{Tested with<br/>examples?}
+
+    Q2 -->|Failed| Q3{Can modify<br/>greedy criteria?}
+    Q2 -->|Passed| Q4{Can prove<br/>correctness?}
+
+    Q3 -->|Yes| Q5[Modify criterion<br/>and retest]
+    Q3 -->|No| DP1[Use Dynamic Programming]
+
+    Q4 -->|Yes| Success[✓ Greedy works!]
+    Q4 -->|No but intuitive| Q6{Small input size?}
+
+    Q6 -->|Yes| Impl[Implement and test<br/>extensively]
+    Q6 -->|No| Risky[Risky - need proof<br/>or switch to DP]
+
+    Q5 --> Q2
+
+    style Success fill:#90EE90
+    style DP1 fill:#FFD700
+    style NotGreedy fill:#FFB6C1
+    style Risky fill:#FFA500
+    style Impl fill:#87CEEB
+```
+
+### Example: Applying Framework to Jump Game
+
+```
+PROBLEM: Can you reach the last index?
+Array: [2, 3, 1, 1, 4]
+
+STEP 1: Identify Optimization
+Goal: Determine if we can reach the end
+
+STEP 2: Greedy Choice
+At each position, track the farthest position we can reach
+Greedy choice: Always extend reach as far as possible
+
+STEP 3: Verify Greedy Works
+- If we can reach position i, we can reach any j < i
+- If from position i we can reach i+nums[i], we should track this
+- This local choice (max reach) leads to global optimum
+
+STEP 4: Implementation
+max_reach = 0
+for i in range(len(nums)):
+    if i > max_reach:
+        return False  # Can't reach this position
+    max_reach = max(max_reach, i + nums[i])
+    if max_reach >= len(nums) - 1:
+        return True
+return False
+
+STEP 5: Verify
+- [2,3,1,1,4]: max_reach progresses: 2→4→4→4→8 ✓
+- [3,2,1,0,4]: max_reach progresses: 3→3→3→3 ✗
+```
+
+### Common Pitfalls When Using Greedy
+
+```
+1. ASSUMING GREEDY WORKS WITHOUT PROOF
+   ⚠ Just because it seems logical doesn't mean it's correct
+   ✓ Always verify with examples and try to prove
+
+2. FORGETTING TO SORT
+   ⚠ Greedy often requires sorted input
+   ✓ Identify the sorting criterion first
+
+3. NOT CHECKING ALL CONSTRAINTS
+   ⚠ Local optimum must satisfy all constraints
+   ✓ Validate each greedy choice
+
+4. CONFUSING GREEDY WITH DP
+   ⚠ If you need to look at multiple future states, it's probably DP
+   ✓ Greedy makes decisions based on current information only
+
+5. NOT TESTING EDGE CASES
+   ⚠ Greedy can fail on specific inputs
+   ✓ Test thoroughly, especially edge cases
 ```
 
 ## When to Use Greedy Algorithms

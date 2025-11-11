@@ -4,11 +4,61 @@ Arrays are one of the most fundamental data structures in computer science. They
 
 ## Visual Representation
 
+### Array Structure
+
+```mermaid
+graph LR
+    subgraph "Array: [10, 20, 30, 40, 50, 60]"
+        A0["Index: 0<br/>Value: 10"]
+        A1["Index: 1<br/>Value: 20"]
+        A2["Index: 2<br/>Value: 30"]
+        A3["Index: 3<br/>Value: 40"]
+        A4["Index: 4<br/>Value: 50"]
+        A5["Index: 5<br/>Value: 60"]
+    end
+    A0 -.Contiguous Memory.-> A1 -.-> A2 -.-> A3 -.-> A4 -.-> A5
+
+    style A0 fill:#e1f5ff
+    style A1 fill:#e1f5ff
+    style A2 fill:#e1f5ff
+    style A3 fill:#e1f5ff
+    style A4 fill:#e1f5ff
+    style A5 fill:#e1f5ff
 ```
-Index:  0    1    2    3    4    5
-       ┌────┬────┬────┬────┬────┬────┐
-Array: │ 10 │ 20 │ 30 │ 40 │ 50 │ 60 │
-       └────┴────┴────┴────┴────┴────┘
+
+### Array Operations Flowchart
+
+```mermaid
+graph TD
+    Start[Array Operation] --> Q1{What operation?}
+
+    Q1 -->|Access| Access[Access by Index]
+    Q1 -->|Insert| Q2{Where to insert?}
+    Q1 -->|Delete| Q3{Where to delete?}
+    Q1 -->|Search| Q4{Is array sorted?}
+
+    Access --> AccessTime["O(1) - Direct access<br/>arr[index]"]
+
+    Q2 -->|At end| InsertEnd["O(1) - Append<br/>No shifting needed"]
+    Q2 -->|At beginning| InsertStart["O(n) - Prepend<br/>Shift all elements right"]
+    Q2 -->|In middle| InsertMiddle["O(n) - Insert<br/>Shift elements from index"]
+
+    Q3 -->|At end| DeleteEnd["O(1) - Pop<br/>No shifting needed"]
+    Q3 -->|At beginning| DeleteStart["O(n) - Remove first<br/>Shift all elements left"]
+    Q3 -->|In middle| DeleteMiddle["O(n) - Remove<br/>Shift elements from index"]
+
+    Q4 -->|Yes| SearchSorted["O(log n)<br/>Binary Search"]
+    Q4 -->|No| SearchUnsorted["O(n)<br/>Linear Search"]
+
+    style AccessTime fill:#90EE90
+    style InsertEnd fill:#90EE90
+    style DeleteEnd fill:#90EE90
+    style InsertStart fill:#FFA500
+    style DeleteStart fill:#FFA500
+    style InsertMiddle fill:#FFA500
+    style DeleteMiddle fill:#FFA500
+    style SearchSorted fill:#FFD700
+    style SearchUnsorted fill:#FFD700
 ```
 
 ## Types of Arrays
@@ -226,6 +276,25 @@ console.log(linearSearch(arr, 9));  // Output: 2
 ```
 
 ### 2. Binary Search (for sorted arrays)
+
+#### Visual Step-by-Step Binary Search
+
+```mermaid
+graph TD
+    Start["Array: [1, 2, 3, 4, 5, 6, 7, 8, 9]<br/>Target: 7"] --> Step1
+    Step1["Step 1: left=0, right=8<br/>mid=4, arr[4]=5<br/>5 < 7, search right half"] --> Step2
+    Step2["Step 2: left=5, right=8<br/>mid=6, arr[6]=7<br/>Found! Return index 6"] --> Found["✓ Target found at index 6"]
+
+    Start2["Array: [1, 2, 3, 4, 5, 6, 7, 8, 9]<br/>Target: 10"] --> S1
+    S1["Step 1: left=0, right=8<br/>mid=4, arr[4]=5<br/>5 < 10, search right half"] --> S2
+    S2["Step 2: left=5, right=8<br/>mid=6, arr[6]=7<br/>7 < 10, search right half"] --> S3
+    S3["Step 3: left=7, right=8<br/>mid=7, arr[7]=8<br/>8 < 10, search right half"] --> S4
+    S4["Step 4: left=8, right=8<br/>mid=8, arr[8]=9<br/>9 < 10, search right half"] --> S5
+    S5["Step 5: left=9, right=8<br/>left > right"] --> NotFound["✗ Target not found, return -1"]
+
+    style Found fill:#90EE90
+    style NotFound fill:#FFB6C6
+```
 
 **Python:**
 ```python

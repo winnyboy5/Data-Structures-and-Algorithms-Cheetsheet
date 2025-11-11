@@ -4,30 +4,109 @@ A heap is a specialized tree-based data structure that satisfies the heap proper
 
 ## Visual Representation
 
-```
-Max Heap:
-        ┌───┐
-        │ 9 │
-        └─┬─┘
-     ┌────┴────┐
-  ┌──┴──┐   ┌──┴──┐
-  │  7  │   │  8  │
-  └──┬──┘   └──┬──┘
-  ┌──┴──┐   ┌──┴──┐
-  │  5  │   │  6  │
-  └─────┘   └─────┘
+### Max Heap Structure
 
-Min Heap:
-        ┌───┐
-        │ 1 │
-        └─┬─┘
-     ┌────┴────┐
-  ┌──┴──┐   ┌──┴──┐
-  │  2  │   │  3  │
-  └──┬──┘   └──┬──┘
-  ┌──┴──┐   ┌──┴──┐
-  │  4  │   │  5  │
-  └─────┘   └─────┘
+```mermaid
+graph TD
+    Root["9<br/>(Root - Maximum)"] --> L1_L["7"]
+    Root --> L1_R["8"]
+    L1_L --> L2_LL["5"]
+    L1_L --> L2_LR["6"]
+    L1_R --> L2_RL["4"]
+    L1_R --> L2_RR["3"]
+
+    Note["Max Heap Property:<br/>Parent ≥ Children"]
+
+    style Root fill:#FFD700
+    style L1_L fill:#90EE90
+    style L1_R fill:#90EE90
+    style Note fill:#FFE4B5
+```
+
+### Min Heap Structure
+
+```mermaid
+graph TD
+    Root["1<br/>(Root - Minimum)"] --> L1_L["2"]
+    Root --> L1_R["3"]
+    L1_L --> L2_LL["4"]
+    L1_L --> L2_LR["5"]
+    L1_R --> L2_RL["6"]
+    L1_R --> L2_RR["7"]
+
+    Note["Min Heap Property:<br/>Parent ≤ Children"]
+
+    style Root fill:#87CEEB
+    style L1_L fill:#90EE90
+    style L1_R fill:#90EE90
+    style Note fill:#FFE4B5
+```
+
+### Heap Operations Visual
+
+```mermaid
+graph TD
+    subgraph "Insert Operation"
+        I1["1. Add to bottom"] --> I2["2. Bubble up"]
+        I2 --> I3["3. Compare with parent"]
+        I3 --> I4{Violates<br/>heap property?}
+        I4 -->|Yes| I5["Swap with parent"]
+        I5 --> I3
+        I4 -->|No| I6["✓ Done - O(log n)"]
+    end
+
+    subgraph "Extract Min/Max"
+        E1["1. Save root value"] --> E2["2. Move last to root"]
+        E2 --> E3["3. Bubble down"]
+        E3 --> E4{Violates<br/>heap property?}
+        E4 -->|Yes| E5["Swap with smaller/larger child"]
+        E5 --> E3
+        E4 -->|No| E6["✓ Done - O(log n)"]
+    end
+
+    style I6 fill:#90EE90
+    style E6 fill:#90EE90
+```
+
+### Heap vs Other Structures
+
+```mermaid
+graph TD
+    Problem[Problem Type] --> Q1{Need quick access<br/>to min or max?}
+
+    Q1 -->|Yes| Q2{Need both<br/>min AND max?}
+    Q1 -->|Need sorted| BST["Use BST<br/>O(log n) for all ops<br/>Maintains sorted order"]
+
+    Q2 -->|Only min OR max| Heap["✓ Use Heap<br/>O(1) peek min/max<br/>O(log n) insert/extract"]
+
+    Q2 -->|Need both| TwoHeaps["✓ Use Two Heaps<br/>Max heap + Min heap<br/>Find median in O(1)"]
+
+    Q2 -->|Need all sorted| PQ["Use Priority Queue<br/>(implemented with heap)<br/>Extract in sorted order"]
+
+    style Heap fill:#90EE90
+    style TwoHeaps fill:#FFD700
+    style BST fill:#87CEEB
+    style PQ fill:#FFB6C1
+```
+
+### Heap Array Representation
+
+```mermaid
+graph LR
+    subgraph "Array: [9, 7, 8, 5, 6, 4, 3]"
+        A0["Index 0<br/>Value: 9<br/>Root"]
+        A1["Index 1<br/>Value: 7<br/>Left child"]
+        A2["Index 2<br/>Value: 8<br/>Right child"]
+        A3["Index 3<br/>Value: 5"]
+        A4["Index 4<br/>Value: 6"]
+    end
+
+    Formulas["Parent: (i-1)/2<br/>Left child: 2i+1<br/>Right child: 2i+2"]
+
+    style A0 fill:#FFD700
+    style A1 fill:#90EE90
+    style A2 fill:#90EE90
+    style Formulas fill:#FFE4B5
 ```
 
 ## Key Operations

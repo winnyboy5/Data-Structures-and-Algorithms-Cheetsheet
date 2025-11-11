@@ -21,6 +21,257 @@ A queue is a linear data structure that follows the First In, First Out (FIFO) p
 4. **isEmpty**: Check if the queue is empty
 5. **Size**: Get the number of elements in the queue
 
+## How to Approach Queue Problems
+
+### Step 1: Identify if a Queue is Needed
+
+```mermaid
+graph TD
+    Start[Problem Analysis] --> Q1{Need to process<br/>in FIFO order?}
+
+    Q1 -->|Yes| Queue1[✓ Use Queue<br/>Simple Queue]
+    Q1 -->|No| Q2{Level-by-level<br/>processing?}
+
+    Q2 -->|Yes| Queue2[✓ Use Queue<br/>BFS Pattern]
+    Q2 -->|No| Q3{Need to track<br/>order of arrival?}
+
+    Q3 -->|Yes| Q4{Priority-based<br/>processing?}
+    Q3 -->|No| Other[Consider other<br/>data structures]
+
+    Q4 -->|Yes| PQ[✓ Use Priority Queue<br/>Heap-based]
+    Q4 -->|No| Queue3[✓ Use Simple Queue]
+
+    style Queue1 fill:#90EE90
+    style Queue2 fill:#90EE90
+    style Queue3 fill:#90EE90
+    style PQ fill:#FFD700
+    style Other fill:#FFB6C1
+```
+
+### Step 2: Choose the Right Queue Type
+
+```mermaid
+graph TD
+    Start[Queue Problem] --> Q1{Need priority<br/>ordering?}
+
+    Q1 -->|Yes| Priority[Priority Queue<br/>Use: Task scheduling,<br/>merge k sorted lists]
+    Q1 -->|No| Q2{Need access to<br/>both ends?}
+
+    Q2 -->|Yes| Deque[Double-ended Queue<br/>Use: Sliding window max,<br/>palindrome checks]
+    Q2 -->|No| Q3{Fixed size buffer?}
+
+    Q3 -->|Yes| Circular[Circular Queue<br/>Use: Ring buffers,<br/>resource pooling]
+    Q3 -->|No| Q4{Simple FIFO?}
+
+    Q4 -->|Yes| Simple[Simple Queue<br/>Use: BFS, level order,<br/>task queues]
+
+    style Priority fill:#FFD700
+    style Deque fill:#87CEEB
+    style Circular fill:#DDA0DD
+    style Simple fill:#90EE90
+```
+
+### Step 3: Common Queue Problem Patterns
+
+#### Pattern 1: Level-Order Traversal (BFS)
+
+```
+Problem indicators:
+- Process tree/graph level by level
+- Find shortest path in unweighted graph
+- Explore all neighbors before going deeper
+
+Approach:
+1. Initialize queue with starting node
+2. Mark starting node as visited
+3. While queue not empty:
+   - Dequeue front element
+   - Process current element
+   - Enqueue all unvisited neighbors
+   - Mark neighbors as visited
+
+Template:
+queue = [start_node]
+visited = {start_node}
+
+while queue:
+    current = queue.pop(0)
+    process(current)
+
+    for neighbor in get_neighbors(current):
+        if neighbor not in visited:
+            visited.add(neighbor)
+            queue.append(neighbor)
+```
+
+#### Pattern 2: Sliding Window with Queue
+
+```
+Problem indicators:
+- Find max/min in sliding windows
+- Track elements in a range
+- Need to maintain order
+
+Approach:
+1. Use deque to store indices or values
+2. Maintain deque in sorted order (increasing or decreasing)
+3. Remove elements outside current window
+4. Front of deque always has answer
+
+Template:
+from collections import deque
+
+dq = deque()
+result = []
+
+for i in range(len(arr)):
+    # Remove elements outside window
+    while dq and dq[0] < i - k + 1:
+        dq.popleft()
+
+    # Maintain order (e.g., decreasing for max)
+    while dq and arr[dq[-1]] < arr[i]:
+        dq.pop()
+
+    dq.append(i)
+
+    # Add result when window is complete
+    if i >= k - 1:
+        result.append(arr[dq[0]])
+```
+
+#### Pattern 3: Multi-Source BFS
+
+```
+Problem indicators:
+- Multiple starting points
+- Need minimum distance from any source
+- Simultaneous expansion
+
+Approach:
+1. Initialize queue with ALL sources
+2. Process all sources simultaneously
+3. Track distance/level for each cell
+4. Stop when target found or queue empty
+
+Template:
+queue = deque()
+visited = set()
+
+# Add all sources to queue
+for source in sources:
+    queue.append((source, 0))  # (node, distance)
+    visited.add(source)
+
+while queue:
+    node, dist = queue.popleft()
+
+    if is_target(node):
+        return dist
+
+    for neighbor in get_neighbors(node):
+        if neighbor not in visited:
+            visited.add(neighbor)
+            queue.append((neighbor, dist + 1))
+```
+
+#### Pattern 4: Priority Queue for Scheduling
+
+```
+Problem indicators:
+- Process tasks by priority
+- Merge multiple sorted sequences
+- Always need min/max element
+
+Approach:
+1. Use heapq (priority queue)
+2. Push elements with priority
+3. Always pop minimum priority element
+4. Re-insert if needed
+
+Template:
+import heapq
+
+pq = []
+
+# Add tasks with priority
+for task in tasks:
+    heapq.heappush(pq, (priority, task))
+
+# Process in priority order
+while pq:
+    priority, task = heapq.heappop(pq)
+    process(task)
+
+    # Re-insert if needed
+    if needs_rescheduling(task):
+        heapq.heappush(pq, (new_priority, task))
+```
+
+### Step 4: Problem-Solving Decision Tree
+
+```mermaid
+graph TD
+    Problem[Queue Problem] --> Type{Problem Type?}
+
+    Type -->|Graph/Tree| BFS[Use BFS with Queue]
+    Type -->|Sliding Window| Window{Need min/max<br/>in window?}
+    Type -->|Scheduling| Sched{Priority needed?}
+    Type -->|Simulation| Sim[Use Simple Queue<br/>for events]
+
+    BFS --> Single{Single or<br/>multiple sources?}
+    Single -->|Single| BFS1[Standard BFS]
+    Single -->|Multiple| BFS2[Multi-source BFS]
+
+    Window -->|Yes| Deque1[Use Monotonic Deque]
+    Window -->|No| Deque2[Use Simple Deque]
+
+    Sched -->|Yes| PQ[Use Priority Queue<br/>Min Heap]
+    Sched -->|No| FIFO[Use Simple Queue<br/>FIFO]
+
+    style BFS1 fill:#90EE90
+    style BFS2 fill:#87CEEB
+    style Deque1 fill:#FFD700
+    style Deque2 fill:#DDA0DD
+    style PQ fill:#FFA500
+    style FIFO fill:#90EE90
+```
+
+### Step 5: When to Use Which Queue
+
+| Scenario | Queue Type | Why | Example Problems |
+|----------|-----------|-----|-----------------|
+| BFS traversal | Simple Queue | FIFO order | Binary tree level order |
+| Task scheduling | Priority Queue | Order by priority | CPU scheduling, Merge k sorted |
+| Sliding window max/min | Deque | Access both ends | Max in sliding window |
+| Fixed-size buffer | Circular Queue | Memory efficiency | Stream processing |
+| Need to remove from both ends | Deque | Flexibility | Palindrome check |
+| Process events in order | Simple Queue | Sequential processing | Print queue |
+
+### Step 6: Common Mistakes to Avoid
+
+```
+1. USING WRONG QUEUE TYPE
+   ⚠ Using list.pop(0) instead of deque.popleft() in Python
+   ✓ Always use collections.deque for efficient O(1) operations
+
+2. FORGETTING TO MARK AS VISITED IN BFS
+   ⚠ This causes infinite loops or revisiting nodes
+   ✓ Always maintain a visited set
+
+3. PROCESSING QUEUE INCORRECTLY IN LEVEL-ORDER
+   ⚠ Not tracking level boundaries properly
+   ✓ Store level size before processing each level
+
+4. NOT HANDLING EMPTY QUEUE
+   ⚠ Trying to dequeue from empty queue
+   ✓ Always check if queue is empty before dequeueing
+
+5. PRIORITY QUEUE DIRECTION CONFUSION
+   ⚠ Python's heapq is min-heap by default
+   ✓ Negate values for max-heap behavior
+```
+
 ## Implementation in Python and JavaScript
 
 ### Python
