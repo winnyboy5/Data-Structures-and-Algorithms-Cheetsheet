@@ -4,14 +4,65 @@ A stack is a linear data structure that follows the Last In, First Out (LIFO) pr
 
 ## Visual Representation
 
+### Stack Structure (LIFO)
+
+```mermaid
+graph TD
+    Top["TOP ← Operations happen here"] --> E3["30<br/>(Last In)"]
+    E3 --> E2["20"]
+    E2 --> E1["10<br/>(First In)"]
+    E1 --> Bottom["BOTTOM"]
+
+    style Top fill:#FFD700
+    style E3 fill:#90EE90
+    style E2 fill:#87CEEB
+    style E1 fill:#FFB6C1
 ```
-   ┌────┐
-   │ 30 │ ← Top (Last In, First Out)
-   ├────┤
-   │ 20 │
-   ├────┤
-   │ 10 │
-   └────┘
+
+### Stack Operations
+
+```mermaid
+graph TD
+    subgraph "Push Operation"
+        P1["Stack: [10, 20]<br/>Push(30)"] --> P2["1. Add 30 to top"]
+        P2 --> P3["Stack: [10, 20, 30]<br/>✓ O(1) time"]
+    end
+
+    subgraph "Pop Operation"
+        Pop1["Stack: [10, 20, 30]<br/>Pop()"] --> Pop2["1. Remove from top"]
+        Pop2 --> Pop3["Returns: 30<br/>Stack: [10, 20]<br/>✓ O(1) time"]
+    end
+
+    subgraph "Peek Operation"
+        Peek1["Stack: [10, 20, 30]<br/>Peek()"] --> Peek2["1. View top element"]
+        Peek2 --> Peek3["Returns: 30<br/>Stack unchanged<br/>✓ O(1) time"]
+    end
+
+    style P3 fill:#90EE90
+    style Pop3 fill:#90EE90
+    style Peek3 fill:#90EE90
+```
+
+### Stack Use Cases Decision Tree
+
+```mermaid
+graph TD
+    Problem[Problem Type] --> Q1{Need to track<br/>recent items?}
+
+    Q1 -->|Yes| Q2{Need reverse order<br/>or undo?}
+    Q1 -->|Process nested| Q3{Matching pairs<br/>or balanced?}
+
+    Q2 -->|Yes| Undo["✓ Use Stack<br/>• Browser history<br/>• Undo/Redo<br/>• Function call stack"]
+
+    Q3 -->|Yes| Balanced["✓ Use Stack<br/>• Valid parentheses<br/>• HTML tag matching<br/>• Expression evaluation"]
+
+    Q1 -->|Processing| Q4{Need to evaluate<br/>expressions?}
+
+    Q4 -->|Yes| Eval["✓ Use Stack<br/>• Infix to postfix<br/>• Calculator<br/>• Reverse Polish Notation"]
+
+    style Undo fill:#90EE90
+    style Balanced fill:#FFD700
+    style Eval fill:#87CEEB
 ```
 
 ## Key Operations
