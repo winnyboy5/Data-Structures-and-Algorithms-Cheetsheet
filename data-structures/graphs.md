@@ -4,26 +4,74 @@ A graph is a non-linear data structure consisting of nodes (vertices) and edges 
 
 ## Visual Representation
 
+### Undirected Graph
+
+```mermaid
+graph LR
+    A((A)) --- B((B))
+    A --- C((C))
+    B --- D((D))
+    C --- D
+    D --- E((E))
+
+    style A fill:#FFD700
+    style B fill:#87CEEB
+    style C fill:#90EE90
+    style D fill:#FFB6C1
+    style E fill:#DDA0DD
 ```
-Undirected Graph:
-    A --- B
-    |     |
-    |     |
-    C --- D --- E
 
-Directed Graph:
-    A --→ B
-    ↑     ↓
-    |     |
-    C ←-- D --→ E
+### Directed Graph (Digraph)
 
-Weighted Graph:
-    A ---5--- B
-    |         |
-    |         |
-    2         3
-    |         |
-    C ---1--- D ---4--- E
+```mermaid
+graph TD
+    A((A)) --> B((B))
+    B --> D((D))
+    D --> E((E))
+    D --> C((C))
+    C --> A
+
+    style A fill:#FFD700
+    style B fill:#87CEEB
+    style C fill:#90EE90
+    style D fill:#FFB6C1
+    style E fill:#DDA0DD
+```
+
+### Weighted Graph
+
+```mermaid
+graph LR
+    A((A)) ---|5| B((B))
+    A ---|2| C((C))
+    B ---|3| D((D))
+    C ---|1| D
+    D ---|4| E((E))
+
+    style A fill:#FFD700
+    style B fill:#87CEEB
+    style C fill:#90EE90
+    style D fill:#FFB6C1
+    style E fill:#DDA0DD
+```
+
+### Graph Traversal Comparison
+
+```mermaid
+graph TD
+    Start[Graph Traversal] --> Q1{Which algorithm?}
+
+    Q1 -->|DFS| DFS[Depth-First Search]
+    Q1 -->|BFS| BFS[Breadth-First Search]
+
+    DFS --> DFS_Desc["Uses: Stack or Recursion<br/>Order: Go deep first<br/>Applications:<br/>- Detect cycles<br/>- Topological sort<br/>- Path finding<br/>- Connected components"]
+
+    BFS --> BFS_Desc["Uses: Queue<br/>Order: Level by level<br/>Applications:<br/>- Shortest path (unweighted)<br/>- Level order traversal<br/>- Connected components<br/>- Bipartite checking"]
+
+    style DFS fill:#FFE4B5
+    style BFS fill:#E0FFE0
+    style DFS_Desc fill:#FFE4B5
+    style BFS_Desc fill:#E0FFE0
 ```
 
 ## Types of Graphs

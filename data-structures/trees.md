@@ -4,31 +4,117 @@ A tree is a hierarchical data structure consisting of nodes connected by edges. 
 
 ## Visual Representation
 
-```
-Binary Tree:
-        ┌───┐
-        │ 1 │
-        └─┬─┘
-     ┌────┴────┐
-  ┌──┴──┐   ┌──┴──┐
-  │  2  │   │  3  │
-  └──┬──┘   └──┬──┘
-  ┌──┴──┐   ┌──┴──┐
-  │  4  │   │  5  │
-  └─────┘   └─────┘
+### Binary Tree Structure
 
-Binary Search Tree (BST):
-        ┌───┐
-        │ 8 │
-        └─┬─┘
-     ┌────┴────┐
-  ┌──┴──┐   ┌──┴──┐
-  │  3  │   │ 10  │
-  └──┬──┘   └──┬──┘
-  ┌──┴──┐      └──┐
-  │  1  │      ┌──┴──┐
-  └─────┘      │ 14  │
-               └─────┘
+```mermaid
+graph TD
+    Root[1<br/>Root] --> L1_Left[2]
+    Root --> L1_Right[3]
+    L1_Left --> L2_LL[4]
+    L1_Left --> L2_LR[5]
+    L1_Right --> L2_RL[6]
+    L1_Right --> L2_RR[7]
+
+    style Root fill:#FFD700
+    style L1_Left fill:#87CEEB
+    style L1_Right fill:#87CEEB
+    style L2_LL fill:#90EE90
+    style L2_LR fill:#90EE90
+    style L2_RL fill:#90EE90
+    style L2_RR fill:#90EE90
+```
+
+### Binary Search Tree (BST) Structure
+
+BST Property: Left < Parent < Right
+
+```mermaid
+graph TD
+    Root[8<br/>Root] --> L1_Left[3<br/>Left < 8]
+    Root --> L1_Right[10<br/>Right > 8]
+    L1_Left --> L2_LL[1<br/>< 3]
+    L1_Left --> L2_LR[6<br/>> 3, < 8]
+    L1_Right --> L2_RL[NULL]
+    L1_Right --> L2_RR[14<br/>> 10]
+    L2_LR --> L3_LRL[4]
+    L2_LR --> L3_LRR[7]
+    L2_RR --> L3_RRL[13]
+    L2_RR --> L3_RRR[NULL]
+
+    style Root fill:#FFD700
+    style L1_Left fill:#87CEEB
+    style L1_Right fill:#87CEEB
+    style L2_LL fill:#90EE90
+    style L2_LR fill:#90EE90
+    style L2_RR fill:#90EE90
+    style L2_RL fill:#ffcccc
+    style L3_LRL fill:#98FB98
+    style L3_LRR fill:#98FB98
+    style L3_RRL fill:#98FB98
+    style L3_RRR fill:#ffcccc
+```
+
+### Tree Traversals Visualization
+
+```mermaid
+graph TD
+    subgraph "Tree Structure"
+        A[1] --> B[2]
+        A --> C[3]
+        B --> D[4]
+        B --> E[5]
+        C --> F[6]
+        C --> G[7]
+    end
+
+    subgraph "Traversal Orders"
+        Preorder["Preorder: Root → Left → Right<br/>Result: 1, 2, 4, 5, 3, 6, 7<br/>Use: Copy tree, prefix expression"]
+        Inorder["Inorder: Left → Root → Right<br/>Result: 4, 2, 5, 1, 6, 3, 7<br/>Use: BST sorted order"]
+        Postorder["Postorder: Left → Right → Root<br/>Result: 4, 5, 2, 6, 7, 3, 1<br/>Use: Delete tree, postfix expression"]
+        LevelOrder["Level Order: Level by level<br/>Result: 1, 2, 3, 4, 5, 6, 7<br/>Use: BFS, shortest path in tree"]
+    end
+
+    style Preorder fill:#FFE4B5
+    style Inorder fill:#E0FFE0
+    style Postorder fill:#E0E0FF
+    style LevelOrder fill:#FFE0F0
+```
+
+### BST Operations Decision Tree
+
+```mermaid
+graph TD
+    Start[BST Operation] --> Q1{What operation?}
+
+    Q1 -->|Search| Search[Compare with root]
+    Q1 -->|Insert| Insert[Find insertion point]
+    Q1 -->|Delete| Delete[Find node to delete]
+
+    Search --> SQ1{Target < Node?}
+    SQ1 -->|Yes| SLeft[Go left]
+    SQ1 -->|No| SQ2{Target > Node?}
+    SQ2 -->|Yes| SRight[Go right]
+    SQ2 -->|No| SFound[Found! Return node]
+
+    Insert --> IQ1{Value < Node?}
+    IQ1 -->|Yes| ILeft{Left is NULL?}
+    IQ1 -->|No| IRight{Right is NULL?}
+    ILeft -->|Yes| IInsertLeft[Insert as left child]
+    ILeft -->|No| IGoLeft[Go left, repeat]
+    IRight -->|Yes| IInsertRight[Insert as right child]
+    IRight -->|No| IGoRight[Go right, repeat]
+
+    Delete --> DQ1{Node has children?}
+    DQ1 -->|No children| D0[Remove node directly]
+    DQ1 -->|One child| D1[Replace with child]
+    DQ1 -->|Two children| D2["Find inorder successor<br/>Replace value, delete successor"]
+
+    style SFound fill:#90EE90
+    style IInsertLeft fill:#90EE90
+    style IInsertRight fill:#90EE90
+    style D0 fill:#FFD700
+    style D1 fill:#FFD700
+    style D2 fill:#FFA500
 ```
 
 ## Types of Trees

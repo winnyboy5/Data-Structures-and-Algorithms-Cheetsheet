@@ -57,6 +57,71 @@ Before diving into sorting algorithms, you should understand:
 
 *Note: n is the number of elements, k is the range of elements*
 
+### Sorting Algorithm Selection Guide
+
+```mermaid
+graph TD
+    Start[Need to Sort?] --> Q1{What is data size?}
+
+    Q1 -->|Small n < 50| Q2{Nearly sorted?}
+    Q1 -->|Medium-Large| Q3{What constraints?}
+
+    Q2 -->|Yes| Insertion["Insertion Sort<br/>O(n) best case<br/>Simple, stable"]
+    Q2 -->|No| Simple["Bubble/Selection Sort<br/>O(n²) but simple<br/>Use for learning"]
+
+    Q3 -->|Memory limited| Q4{Need stability?}
+    Q3 -->|Speed critical| Quick["Quick Sort<br/>O(n log n) average<br/>Fast in practice"]
+
+    Q4 -->|Yes, need stable| Merge["Merge Sort<br/>O(n log n) guaranteed<br/>Stable, uses O(n) space"]
+    Q4 -->|No, can be unstable| Heap["Heap Sort<br/>O(n log n) guaranteed<br/>In-place, O(1) space"]
+
+    Q3 -->|Limited range| Q5{Integers only?}
+    Q5 -->|Yes| Q6{Range size?}
+    Q6 -->|Small k| Counting["Counting Sort<br/>O(n+k)<br/>Non-comparison sort"]
+    Q6 -->|Large k| Radix["Radix Sort<br/>O(nk)<br/>Digit by digit"]
+
+    style Insertion fill:#90EE90
+    style Quick fill:#FFD700
+    style Merge fill:#87CEEB
+    style Heap fill:#DDA0DD
+    style Counting fill:#FFB6C1
+    style Radix fill:#F0E68C
+    style Simple fill:#FFA500
+```
+
+### Sorting Algorithm Properties
+
+```mermaid
+graph LR
+    subgraph "Comparison-Based O(n log n)"
+        Merge[Merge Sort<br/>Stable ✓<br/>In-place ✗<br/>Space: O n]
+        Quick[Quick Sort<br/>Stable ✗<br/>In-place ✓<br/>Space: O log n]
+        Heap[Heap Sort<br/>Stable ✗<br/>In-place ✓<br/>Space: O 1]
+    end
+
+    subgraph "Simple O(n²)"
+        Bubble[Bubble Sort<br/>Stable ✓<br/>In-place ✓<br/>Best: O n]
+        Selection[Selection Sort<br/>Stable ✗<br/>In-place ✓<br/>Always: O n²]
+        Insert[Insertion Sort<br/>Stable ✓<br/>In-place ✓<br/>Best: O n]
+    end
+
+    subgraph "Non-Comparison O(n+k)"
+        Count[Counting Sort<br/>Stable ✓<br/>Limited range]
+        Radix[Radix Sort<br/>Stable ✓<br/>Integers/Strings]
+        Bucket[Bucket Sort<br/>Stable ✓<br/>Uniform distribution]
+    end
+
+    style Merge fill:#87CEEB
+    style Quick fill:#FFD700
+    style Heap fill:#DDA0DD
+    style Bubble fill:#FFE4B5
+    style Selection fill:#FFA500
+    style Insert fill:#90EE90
+    style Count fill:#FFB6C1
+    style Radix fill:#F0E68C
+    style Bucket fill:#E0FFE0
+```
+
 ## Bubble Sort
 
 ### Difficulty: ★☆☆☆☆ (Easy)

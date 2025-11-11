@@ -4,21 +4,58 @@ A linked list is a linear data structure where elements are stored in nodes, and
 
 ## Visual Representation
 
-```
-Singly Linked List:
-┌────────┐    ┌────────┐    ┌────────┐    ┌────────┐
-│ Value: 1│    │ Value: 2│    │ Value: 3│    │ Value: 4│
-│ Next: ──┼───►│ Next: ──┼───►│ Next: ──┼───►│ Next: ──┼───► NULL
-└────────┘    └────────┘    └────────┘    └────────┘
-   Head                                      Tail
+### Singly Linked List Structure
 
-Doubly Linked List:
-┌─────────────┐    ┌─────────────┐    ┌─────────────┐
-│ Prev: NULL  │    │ Prev: ◄─────┼────│ Prev: ◄─────┼────
-│ Value: 1    │    │ Value: 2    │    │ Value: 3    │
-│ Next: ──────┼───►│ Next: ──────┼───►│ Next: NULL  │
-└─────────────┘    └─────────────┘    └─────────────┘
-      Head                                  Tail
+```mermaid
+graph LR
+    Head[Head] --> N1
+    N1["Node 1<br/>Value: 10<br/>Next: →"] --> N2["Node 2<br/>Value: 20<br/>Next: →"]
+    N2 --> N3["Node 3<br/>Value: 30<br/>Next: →"]
+    N3 --> N4["Node 4<br/>Value: 40<br/>Next: →"]
+    N4 --> NULL[NULL]
+    N4 -.Tail.-> Tail[Tail]
+
+    style N1 fill:#e1f5ff
+    style N2 fill:#e1f5ff
+    style N3 fill:#e1f5ff
+    style N4 fill:#e1f5ff
+    style NULL fill:#ffcccc
+```
+
+### Doubly Linked List Structure
+
+```mermaid
+graph LR
+    NULL1[NULL] --> N1
+    Head[Head] -.-> N1
+    N1["Node 1<br/>← Prev | Value: 10 | Next →"] <--> N2["Node 2<br/>← Prev | Value: 20 | Next →"]
+    N2 <--> N3["Node 3<br/>← Prev | Value: 30 | Next →"]
+    N3 <--> N4["Node 4<br/>← Prev | Value: 40 | Next →"]
+    N4 --> NULL2[NULL]
+    N4 -.Tail.-> Tail[Tail]
+
+    style N1 fill:#ffe1ff
+    style N2 fill:#ffe1ff
+    style N3 fill:#ffe1ff
+    style N4 fill:#ffe1ff
+    style NULL1 fill:#ffcccc
+    style NULL2 fill:#ffcccc
+```
+
+### Circular Linked List Structure
+
+```mermaid
+graph LR
+    Head[Head] --> N1
+    N1["Node 1<br/>Value: 10<br/>Next: →"] --> N2["Node 2<br/>Value: 20<br/>Next: →"]
+    N2 --> N3["Node 3<br/>Value: 30<br/>Next: →"]
+    N3 --> N4["Node 4<br/>Value: 40<br/>Next: →"]
+    N4 --> N1
+
+    style N1 fill:#e1ffe1
+    style N2 fill:#e1ffe1
+    style N3 fill:#e1ffe1
+    style N4 fill:#e1ffe1
 ```
 
 ## Types of Linked Lists
@@ -527,6 +564,21 @@ console.log(doublyLinkedList.printList());  // Output: [5, 10, 20]
 
 ### 1. Reverse a Linked List
 
+#### Visual Step-by-Step Reversal
+
+```mermaid
+graph TD
+    Start["Initial List<br/>1 → 2 → 3 → 4 → NULL"] --> Step1
+    Step1["Step 1: prev=NULL, curr=1<br/>NULL ← 1   2 → 3 → 4 → NULL"] --> Step2
+    Step2["Step 2: prev=1, curr=2<br/>NULL ← 1 ← 2   3 → 4 → NULL"] --> Step3
+    Step3["Step 3: prev=2, curr=3<br/>NULL ← 1 ← 2 ← 3   4 → NULL"] --> Step4
+    Step4["Step 4: prev=3, curr=4<br/>NULL ← 1 ← 2 ← 3 ← 4"] --> Result
+    Result["Final Result<br/>4 → 3 → 2 → 1 → NULL<br/>New Head = 4"]
+
+    style Start fill:#e1f5ff
+    style Result fill:#90EE90
+```
+
 **Python:**
 ```python
 def reverse_linked_list(head):
@@ -568,6 +620,23 @@ function reverseLinkedList(head) {
 ```
 
 ### 2. Detect a Cycle in a Linked List
+
+#### Floyd's Cycle Detection (Tortoise and Hare)
+
+```mermaid
+graph TD
+    Start["Floyd's Cycle Detection<br/>Slow moves 1 step, Fast moves 2 steps"] --> Check{Do they meet?}
+
+    Check -->|No, Fast reaches NULL| NoCycle["No Cycle<br/>Fast reached end"]
+    Check -->|Yes, they meet| HasCycle["Cycle Detected!<br/>They met at same node"]
+
+    Example1["Example 1: No Cycle<br/>1 → 2 → 3 → 4 → NULL<br/>Slow: 1→2→3, Fast: 1→3→NULL"] --> NoCycle
+
+    Example2["Example 2: Has Cycle<br/>1 → 2 → 3 → 4 ↴<br/>↑___________|<br/>Slow: 1→2→3→4→2→3<br/>Fast: 1→3→2→4→3→2<br/>Meet at node 3"] --> HasCycle
+
+    style NoCycle fill:#90EE90
+    style HasCycle fill:#FFD700
+```
 
 **Python:**
 ```python

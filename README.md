@@ -1,6 +1,82 @@
 # Data Structures and Algorithms Cheatsheet
 
-A comprehensive guide to common data structures and algorithms with implementation examples in Python and JavaScript.
+A comprehensive, visual guide to common data structures and algorithms with implementation examples in Python and JavaScript. Each topic includes detailed mermaid diagrams for better understanding.
+
+## 🎯 Quick Navigation
+
+```mermaid
+graph TB
+    Start[DSA Cheatsheet] --> Foundations
+    Start --> DS[Data Structures]
+    Start --> Algo[Algorithms]
+    Start --> Patterns[Patterns]
+    Start --> Problems[Blind 75]
+
+    Foundations[📊 Foundations] --> BigO[Big O Notation]
+
+    DS --> Linear[Linear Structures]
+    DS --> Hierarchical[Hierarchical Structures]
+    DS --> Hash[Hash-Based Structures]
+
+    Linear --> Arrays[Arrays/Lists]
+    Linear --> LinkedLists[Linked Lists]
+    Linear --> Stacks[Stacks]
+    Linear --> Queues[Queues]
+
+    Hierarchical --> Trees[Trees]
+    Hierarchical --> Heaps[Heaps]
+    Hierarchical --> Tries[Tries]
+    Hierarchical --> Graphs[Graphs]
+
+    Hash --> HashTables[Hash Tables/Maps]
+
+    Algo --> Sorting[Sorting]
+    Algo --> Searching[Searching]
+    Algo --> DP[Dynamic Programming]
+    Algo --> Greedy[Greedy]
+    Algo --> Backtrack[Backtracking]
+    Algo --> GraphAlgo[Graph Algorithms]
+
+    Patterns --> TwoPointers[Two Pointers]
+    Patterns --> SlidingWindow[Sliding Window]
+    Patterns --> FastSlow[Fast & Slow Pointers]
+    Patterns --> BinarySearch[Binary Search]
+
+    Problems --> Array75[Array Problems]
+    Problems --> Tree75[Tree Problems]
+    Problems --> Graph75[Graph Problems]
+
+    style Start fill:#FFD700
+    style Foundations fill:#87CEEB
+    style DS fill:#90EE90
+    style Algo fill:#FFB6C1
+    style Patterns fill:#DDA0DD
+    style Problems fill:#F0E68C
+```
+
+## 📚 Learning Path
+
+```mermaid
+graph LR
+    Step1[1. Big O Notation] --> Step2[2. Basic DS:<br/>Arrays, Linked Lists]
+    Step2 --> Step3[3. Stacks & Queues]
+    Step3 --> Step4[4. Recursion &<br/>Basic Sorting]
+    Step4 --> Step5[5. Trees & BST]
+    Step5 --> Step6[6. Hash Tables]
+    Step6 --> Step7[7. Graphs & Traversals]
+    Step7 --> Step8[8. Advanced Algorithms:<br/>DP, Greedy, Backtracking]
+    Step8 --> Step9[9. Practice:<br/>Blind 75 Problems]
+
+    style Step1 fill:#FFE4B5
+    style Step2 fill:#E0FFE0
+    style Step3 fill:#E0E0FF
+    style Step4 fill:#FFE0F0
+    style Step5 fill:#E0F5FF
+    style Step6 fill:#F5E0FF
+    style Step7 fill:#FFE0E0
+    style Step8 fill:#E0FFE0
+    style Step9 fill:#90EE90
+```
 
 ## Table of Contents
 
@@ -378,16 +454,88 @@ Each solution file will contain:
 6. Time and space complexity analysis
 7. Edge cases and optimizations
 
+## 🧠 Problem-Solving Decision Tree
+
+When faced with a coding problem, use this flowchart to determine the best approach:
+
+```mermaid
+graph TD
+    Start[New Problem] --> Q1{Type of problem?}
+
+    Q1 -->|Array/String| Q2{Need to find pairs<br/>or subsequences?}
+    Q1 -->|Tree/Graph| Q3{Need traversal?}
+    Q1 -->|Optimization| Q4{Overlapping<br/>subproblems?}
+    Q1 -->|Collection| Q5{Need fast<br/>lookup/insertion?}
+
+    Q2 -->|Pairs in sorted array| TwoPtr[Two Pointers Pattern]
+    Q2 -->|Subarray with condition| SlidingWin[Sliding Window Pattern]
+    Q2 -->|Multiple solutions| Backtrack[Backtracking]
+
+    Q3 -->|Level by level| BFS[BFS - Use Queue]
+    Q3 -->|Deep exploration| DFS[DFS - Use Stack/Recursion]
+    Q3 -->|Shortest path| ShortestPath[Dijkstra/BFS]
+    Q3 -->|Detect cycle| CycleDetect[Union-Find or DFS]
+
+    Q4 -->|Yes, can cache| DP[Dynamic Programming]
+    Q4 -->|No, greedy choice| Greedy[Greedy Algorithm]
+    Q4 -->|Generate all| BacktrackOpt[Backtracking]
+
+    Q5 -->|Key-value pairs| HashMap[Hash Map/Table]
+    Q5 -->|Ordered data| BST[Binary Search Tree]
+    Q5 -->|Priority-based| Heap[Min/Max Heap]
+    Q5 -->|Range queries| SegTree[Segment Tree]
+
+    style TwoPtr fill:#87CEEB
+    style SlidingWin fill:#90EE90
+    style BFS fill:#FFB6C1
+    style DFS fill:#DDA0DD
+    style DP fill:#FFD700
+    style Greedy fill:#F0E68C
+    style HashMap fill:#FFE4B5
+    style Heap fill:#E0FFE0
+```
+
+## 📊 Complexity Cheat Sheet
+
+Quick reference for common operations:
+
+```mermaid
+graph TD
+    subgraph "Data Structure Time Complexities"
+        A[Array] --> A1["Access: O(1)<br/>Search: O(n)<br/>Insert: O(n)<br/>Delete: O(n)"]
+        B[Linked List] --> B1["Access: O(n)<br/>Search: O(n)<br/>Insert: O(1)<br/>Delete: O(1)"]
+        C[Hash Table] --> C1["Access: N/A<br/>Search: O(1)<br/>Insert: O(1)<br/>Delete: O(1)"]
+        D[Binary Search Tree] --> D1["Access: O(log n)<br/>Search: O(log n)<br/>Insert: O(log n)<br/>Delete: O(log n)"]
+    end
+
+    subgraph "Algorithm Time Complexities"
+        E[Binary Search] --> E1["O(log n)<br/>Requires sorted array"]
+        F[Merge Sort] --> F1["O(n log n)<br/>Stable, uses O(n) space"]
+        G[Quick Sort] --> G1["O(n log n) avg<br/>O(n²) worst<br/>In-place"]
+        H[BFS/DFS] --> H1["O(V + E)<br/>V=vertices, E=edges"]
+    end
+
+    style A1 fill:#E0FFE0
+    style B1 fill:#FFE0E0
+    style C1 fill:#90EE90
+    style D1 fill:#E0F5FF
+    style E1 fill:#FFE4B5
+    style F1 fill:#E0E0FF
+    style G1 fill:#FFE0F0
+    style H1 fill:#F5E0FF
+```
+
 ## How to Use This Cheatsheet
 
 Each topic includes:
-- Conceptual explanations
-- Visual representations
-- Implementation in Python and JavaScript
-- Common patterns and techniques
-- Problem identification tips
-- Time and space complexity analysis
-- Common pitfalls and how to avoid them
+- **Conceptual explanations** with real-world analogies
+- **Visual representations** using mermaid diagrams
+- **Implementation** in Python and JavaScript
+- **Common patterns** and techniques
+- **Problem identification** tips
+- **Time and space complexity** analysis
+- **Common pitfalls** and how to avoid them
+- **Step-by-step visualizations** for complex operations
 
 ## Contributing
 
